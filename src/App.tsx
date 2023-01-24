@@ -6,24 +6,16 @@ function App() {
 
 	let ctx: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
 
-	// if (canvas.current) ctx = canvas.current.getContext('2d')!;
-
 	useEffect((): void => {
 		if (canvas.current) {
-			console.log('lol');
 			ctx = canvas.current.getContext('2d')!;
-			// ctx.getContextAttributes().willReadFrequently = true;
-			// ctx.getImageData(fixRatio, fixRatio, res[1], res[0])
-			// ctx.getImageData(fixRatio, fixRatio, res[1], res[0])
 		}
+
 		// console.log(window.innerHeight, window.innerWidth);
 		// console.log(window.screen.height, window.screen.width);
 		// console.log(window.screen);
-	}, [ctx]);
 
-	// useEffect(() => {
-	// 	console.log('rerender');
-	// })
+	}, [ctx]);
 
 	const pos = { x: 0, y: 0 };
 
@@ -34,15 +26,31 @@ function App() {
 		window.innerWidth - fixRatio,
 	];
 
-	const setPosition = (e: React.MouseEvent) => {
+	// const clicked = useRef(false);
+
+	const [index, setIndex] = useState<number>(-1);
+
+	const mouseDown = (e: React.MouseEvent) => {
+		// console.log('?');
 		if (!canvas.current) return;
+
+
+
 		const c = 20;
 		pos.x = e.clientX - c;
 		pos.y = e.clientY - c;
 	};
 
-	const draw = (e: React.MouseEvent) => {
-		// console.log(ctx);
+	const [saves, setSaves] = useState<string[]>([]);
+
+	const mouseUp = () => {
+		console.log('1');
+		const items = canvas.current?.toDataURL();
+		setSaves(v=>v.concat(items!))
+		setIndex(v=>v+1);
+	}
+
+	const mouseMove = (e: React.MouseEvent) => {
 		if (e.buttons !== 1 || !ctx) return;
 
 		ctx.beginPath();
@@ -52,7 +60,7 @@ function App() {
 		ctx.strokeStyle = '#ff8500';
 
 		ctx.moveTo(pos.x, pos.y);
-		setPosition(e);
+		mouseDown(e);
 		ctx.lineTo(pos.x, pos.y);
 
 		ctx.stroke();
@@ -60,78 +68,76 @@ function App() {
 
 
 	const clearHandler = () => {
+		setIndex(-1);
+		setSaves([]);
 		ctx.clearRect(0, 0, canvas.current?.width as number, canvas.current?.height as number);
 	};
 
-	const [old, setOld] = useState<string>('');
+	// const setHandler = () => {
+	// 	if (canvas.current) {
+	// 		const x = canvas.current.toDataURL();
+	// 		setSaves(x=>x.concat(x));
+	// 	}
+	// };
 
-	const setHandler = async () => {
-		// ctx = canvas.current?.getContext('2d') as CanvasRenderingContext2D;
-		// ctx.getImageData(fixRatio, fixRatio, res[1], res[0])
-		if (canvas.current) {
-			const x = canvas.current.toDataURL();
-			// await timeout(10)
-			setOld(x);
-			// console.log(ctx, canvas.current);
-			// const img = new Image();
-			// img.src = old;
-			// ctx.drawImage(img, fixRatio, fixRatio);
-			// ctx = canvas.current.getContext('2d', { willReadFrequently: true })!;
-			// ctx = canvas.current?.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D;
-		}
-		// ctx.putImageData(x, fixRatio, fixRatio)
-		// ctx = newCtx;
-	};
+	// const useHandler = async () => {
+	// 	const img = new Image();
+	// 	img.src = saves[index];
+	// 	await img.onload;
+	// 	ctx.clearRect(0, 0, canvas.current?.width as number, canvas.current?.height as number);
+	// 	ctx.drawImage(img, 0, 0);
+	// };
 
-	// function timeout(delay: number) {
-	// 	return new Promise( res => setTimeout(res, delay) );
-	// }
-
-	const useHandler = async () => {
-		console.log('use');
-		// ctx.putImageData(old, fixRatio, fixRatio);
+	const redraw = async (direction:boolean) => {
 		const img = new Image();
-		img.src = old;
-		// for (let a = 0; a < 16; a++){
-		// 	console.log('fir');
-		// 	// await setTimeout(() => {
-		// 	// 	// console.log('time');
-		// 	// 	// ctx.clearRect(0, 0, canvas.current?.width as number, canvas.current?.height as number);
-		// 	// 	// ctx.drawImage(img, 0, 0);
-		// 	// }, 1000)
-		// 	// await timeout(1000)
-		// 	// console.log('time');
-		// 	ctx.clearRect(0, 0, canvas.current?.width as number, canvas.current?.height as number);
-		// 	await timeout(500)
-		// 	ctx.drawImage(img, 0, 0);
-		// 	console.log('draw');
-		// 	await timeout(500)
-		// }
 
+		img.src = saves[index-(direction ? 1 : -1)];
+		await img.onload;
 		ctx.clearRect(0, 0, canvas.current?.width as number, canvas.current?.height as number);
-		await new Promise( res => setTimeout(res, 0) )
 		ctx.drawImage(img, 0, 0);
 
-	};
+		setIndex(v=>v-(direction ? 1 : -1));
+	}
 
-	const ctxHandler = () => {
-		ctx = canvas.current?.getContext('2d') as CanvasRenderingContext2D;
-	};
+	const undoHandler = () => {
+		// console.log(saves.length, index);
+		// const img = new Image();
+		//
+		// img.src = saves[index-1];
+		// await img.onload;
+		// ctx.clearRect(0, 0, canvas.current?.width as number, canvas.current?.height as number);
+		// ctx.drawImage(img, 0, 0);
+		//
+		// setIndex(v=>v-1);
+		if (index <= 0) return;
+		redraw(true)
+	}
+
+	const redoHandler = () => {
+		// console.log(saves.length, index);
+		if(saves.length-1 <= index) return ;
+		redraw(false)
+
+	}
 
 	return (
 		<div className={s.app} style={{ height: res[0], width: res[1] }}>
 			<div className={s.buttons}>
 				<button onClick={clearHandler}>clear</button>
-				<button onClick={setHandler}>set</button>
-				<button onClick={useHandler}>user</button>
-				<button onClick={ctxHandler}>ctx</button>
+				<button onClick={undoHandler}>undo</button>
+				<button onClick={redoHandler}>redo</button>
+				<button onClick={() => {console.log(saves.length, index)}}>check</button>
 			</div>
 
 			<canvas ref={canvas}
 					height={res[0]} width={res[1]}
 					className={s.canvas}
-					onMouseMoveCapture={draw}
-					onMouseDown={setPosition} onMouseEnter={setPosition} />
+					// onClick={mouseClick}
+					onMouseMoveCapture={mouseMove}
+					onMouseDown={mouseDown}
+					// onMouseEnter={mouseDown}
+					onMouseUp={mouseUp}
+			/>
 		</div>
 	);
 }
