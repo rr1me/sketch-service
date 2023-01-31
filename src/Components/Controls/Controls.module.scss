@@ -1,0 +1,50 @@
+.tools{
+  position: absolute;
+  top: 25px;
+
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: max-content;
+
+  padding: 15px;
+  background-color: #f8f8f8;
+  border: 1px solid #d2d2d2;
+
+  display: flex;
+  gap: 5px;
+
+  border-radius: 5px;
+}
+
+button{
+  border-radius: 5px;
+  font: 450 14px Roboto;
+  background-color: white;
+  border: 1px solid #d2d2d2;
+  padding: 3px 7px;
+
+  cursor: pointer;
+}
+
+.history{
+  border-radius: 5px;
+  position: absolute;
+  top: 20vh;
+  left: 25px;
+
+  padding: 15px;
+  background-color: #f8f8f8;
+  border: 1px solid #d2d2d2;
+
+  width: max-content;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px
+}
+
+.darkBtn{
+  background-color: gray;
+}
