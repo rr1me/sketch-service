@@ -1,90 +1,55 @@
 import s from './ControlledCanvas.module.scss';
-import React, { FC, useEffect, useRef } from 'react';
-import { actions, IControlState } from '../../redux/slices/controlSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { RefObject, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import baseBrush from '../Brushes/baseBrush';
+import { AppDispatch } from '../../redux/store';
 
-// interface IUseControlledCanvas {
-// 	canvas: HTMLCanvasElement,
-// 	controlledCanvas: object
-//
-// }
+interface IUseControlledCanvas {
+	canvas: RefObject<HTMLCanvasElement>,
+	controlledCanvas: JSX.Element
+}
+const pos = { x: 0, y: 0 };
+const fixRatio = 40;
+const res = [
+	(window.outerHeight - 71) - fixRatio,
+	window.outerWidth - fixRatio,
+];
 
-const { save } = actions;
-
-const useControlledCanvas: any = () => {
+const useControlledCanvas = (): IUseControlledCanvas => {
 	const dispatch = useDispatch();
-	const { history } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
-	let ctx: CanvasRenderingContext2D = {} as CanvasRenderingContext2D;
-	useEffect((): void => {
-		if (canvas.current)
-			ctx = canvas.current.getContext('2d')!;
-	}, [ctx]);
-
-	const pos = { x: 0, y: 0 };
-
-	const fixRatio = 40;
-
-	const res = [
-		(window.outerHeight - 71) - fixRatio,
-		window.outerWidth - fixRatio,
-	];
-
-	const pressed = useRef(false);
-
-	const mouseDown = (e: React.MouseEvent) => {
-		if (!canvas.current) return;
-
-		const c = 20;
-		pos.x = e.clientX - c;
-		pos.y = e.clientY - c;
-
-		if (!pressed.current) {
-			pressed.current = true;
-			ctx.beginPath();
-			ctx.arc(pos.x, pos.y, 5 / 2, 0, 2 * Math.PI, true);
-			ctx.fillStyle = '#ff8500';
-			ctx.fill();
+	useEffect(() => {
+		if (canvas.current) {
+			// const mouseHandlers = getTool('Brush', canvas, pos, dispatch);
+			const [mouseDown, mouseMove, mouseUp] = getTool('Brush', canvas, pos, dispatch);
+			canvas.current.addEventListener('mousedown', mouseDown);
+			canvas.current.addEventListener('mousemove', mouseMove);
+			canvas.current.addEventListener('mouseup', mouseUp);
+			return () => {
+				canvas.current!.removeEventListener('mousedown', mouseDown);
+				canvas.current!.removeEventListener('mousemove', mouseMove);
+				canvas.current!.removeEventListener('mouseup', mouseUp);
+			}
 		}
-	};
-
-	const mouseUp = () => {
-		pressed.current = false;
-		const items = canvas.current?.toDataURL();
-		console.log('SAVE');
-		dispatch(save(items));
-	};
-
-	const mouseMove = (e: React.MouseEvent) => {
-		if (e.buttons !== 1 || !ctx) return;
-
-		ctx.beginPath();
-
-		ctx.lineWidth = 5;
-		ctx.lineCap = 'round';
-		ctx.strokeStyle = '#ff8500';
-
-		ctx.moveTo(pos.x, pos.y);
-		mouseDown(e);
-		ctx.lineTo(pos.x, pos.y);
-
-		ctx.stroke();
-	};
-	console.log(history);
+	}, []);
 
 	return {
 		canvas: canvas, controlledCanvas: (
 			<canvas ref={canvas}
 					height={res[0]} width={res[1]}
 					className={s.canvas}
-					onMouseMoveCapture={mouseMove}
-					onMouseDown={mouseDown}
-					onMouseUp={mouseUp}
 			/>
 		),
 	};
 };
+
+const getTool = (type: string, canvas: RefObject<HTMLCanvasElement>, pos: {x:number, y:number}, dispatch: AppDispatch) => {
+	switch (type) {
+		case 'Brush': return baseBrush({ canvas, pos, dispatch });
+		default: return baseBrush({ canvas, pos, dispatch });
+	}
+}
 
 export default useControlledCanvas;

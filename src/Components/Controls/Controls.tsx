@@ -1,16 +1,22 @@
 import s from './Controls.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, IControlState } from '../../redux/slices/controlSlice';
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
+import { RiArrowGoBackFill, RiArrowGoForwardFill, RiPaintFill } from 'react-icons/ri';
+import { GiVacuumCleaner } from 'react-icons/gi';
+import { FaPaintBrush } from 'react-icons/fa';
+import { IoMdSquare } from 'react-icons/io';
+import { BsCircleFill, BsFillTriangleFill } from 'react-icons/bs';
+import { HiOutlineMinus } from 'react-icons/hi';
 
 interface IControls {
-	canvas: any
+	canvas: RefObject<HTMLCanvasElement>
 }
 
 const {move, step, clear} = actions;
 
 const Controls: FC<IControls> = ({canvas}) => {
-	const ctx: CanvasRenderingContext2D = canvas.current?.getContext('2d');
+	const ctx: CanvasRenderingContext2D = canvas.current?.getContext('2d') as CanvasRenderingContext2D;
 	const width = canvas.current?.width as number;
 	const height = canvas.current?.height as number
 	const dispatch = useDispatch();
@@ -19,7 +25,7 @@ const Controls: FC<IControls> = ({canvas}) => {
 	const draw = async (index:number) => {
 		const img = new Image();
 
-		img.src = saves[index];
+		img.src = saves[index].save;
 		await img.onload;
 		ctx.clearRect(0, 0, width, height);
 		ctx.drawImage(img, 0, 0);
@@ -28,7 +34,6 @@ const Controls: FC<IControls> = ({canvas}) => {
 	const redraw = async (direction:boolean) => {
 		const d = direction ? 1 : -1;
 		await draw(index-d)
-		// setIndex(v=>v-d);
 		dispatch(step(d));
 	}
 
@@ -49,17 +54,27 @@ const Controls: FC<IControls> = ({canvas}) => {
 	return (
 		<div className={s.controls}>
 			<div className={s.tools}>
-				<button onClick={clearHandler}>clear</button>
-				<button onClick={undoHandler}>undo</button>
-				<button onClick={redoHandler}>redo</button>
+				<button className={s.iconButton} onClick={undefined}><FaPaintBrush/></button>
+				<button className={s.iconButton} onClick={undefined}><IoMdSquare/></button>
+				<button className={s.iconButton} onClick={undefined}><BsCircleFill/></button>
+				<button className={s.iconButton} onClick={undefined}><HiOutlineMinus/></button>
+				<button className={s.iconButton} onClick={undefined}><BsFillTriangleFill/></button>
+				<button className={s.iconButton} onClick={undefined}><RiPaintFill/></button>
 			</div>
 
 			<div className={s.history}>
-				History
+				<div className={s.historyCtrl}>
+					<span>History</span>
+					<button className={s.iconButton} onClick={undoHandler}><RiArrowGoBackFill/></button>
+					<button className={s.iconButton} onClick={redoHandler}><RiArrowGoForwardFill/></button>
+					<button className={s.iconButton} onClick={clearHandler}><GiVacuumCleaner/></button>
+				</div>
+
 				{saves.length > 0 && saves.map((v,i) => {
 					return (
-						<button key={i} onClick={historyHandler(i)} className={i > index ? s.darkBtn : undefined}>
-							{i}
+						<button key={v.save} onClick={historyHandler(i)} className={s.historyButton + ' ' + (i > index ? s.historyButtonDark : null)}>
+							<span>{v.type}</span>
+							<span>{i}</span>
 						</button>
 					)
 				})}

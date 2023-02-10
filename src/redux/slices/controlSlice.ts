@@ -2,7 +2,7 @@ import { createSlice, current } from '@reduxjs/toolkit';
 
 export interface IControlState {
 	history: {
-		saves: string[],
+		saves: { type: string, save: string }[],
 		index: number
 	};
 }
@@ -11,12 +11,14 @@ const controlSlice = createSlice({
 	name: 'controlSlice',
 	initialState: {
 		history: {
-			saves: [] as string[],
-			index: -1 as number,
+			saves: [],
+			index: -1,
 		},
 	} as IControlState,
 	reducers: {
 		save: ({ history }, { payload }) => {
+			console.log(payload);
+
 			const saves = history.saves;
 			const index = history.index;
 			saves.length - 1 !== index && saves.splice(index + 1, saves.length);
