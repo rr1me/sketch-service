@@ -1,9 +1,14 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
+export type brushType = 'Brush' | 'Square' | 'Circle'
 
 export interface IControlState {
 	history: {
-		saves: { type: string, save: string }[],
+		saves: { type: brushType, save: string }[],
 		index: number
+	},
+	tool: {
+		type: brushType
 	};
 }
 
@@ -14,28 +19,32 @@ const controlSlice = createSlice({
 			saves: [],
 			index: -1,
 		},
+		tool: {
+			type: 'Brush',
+		},
 	} as IControlState,
 	reducers: {
 		save: ({ history }, { payload }) => {
-			console.log(payload);
-
 			const saves = history.saves;
 			const index = history.index;
 			saves.length - 1 !== index && saves.splice(index + 1, saves.length);
 			history.saves = history.saves.concat(payload);
 
 			history.index = index + 1;
-			console.log(current(history));
 		},
 		step: ({ history }, { payload }) => {
 			history.index = history.index - payload;
 		},
 		move: ({ history }, { payload }) => {
-			history.index = payload
+			history.index = payload;
 		},
 		clear: ({ history }) => {
 			history.saves = [];
 			history.index = -1;
+		},
+		tool: ({ tool }, { payload }) => {
+			tool.type = payload;
+			console.log('q');
 		},
 	},
 });

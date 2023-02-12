@@ -1,41 +1,35 @@
-import React from 'react';
 import { actions } from '../../redux/slices/controlSlice';
-import { AppDispatch } from '../../redux/store';
-import { ITool } from './itool';
+import { ITool, IToolType } from './itool';
+import { updCoords } from './properties';
 
 const { save } = actions;
 
-const baseBrush = ({ canvas, pos, dispatch }: ITool): (((e: MouseEvent) => void) | (() => void))[] => {
-	const ctx = canvas.current!.getContext('2d')!;
+const baseBrush = ({ canvas, pos, dispatch }: ITool): IToolType => {
+	const ctx = canvas.getContext('2d')!;
 	ctx.lineWidth = 15;
+	ctx.strokeStyle = 'black';
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
 
-	const updCoord = (e: MouseEvent) => {
-		const c = 20;
-		pos.x = e.clientX - c;
-		pos.y = e.clientY - c;
-	};
-
 	const mouseDown = (e: MouseEvent) => {
-		if (!canvas.current) return;
-		updCoord(e);
+		updCoords(e, pos);
 		ctx.beginPath();
 		ctx.moveTo(pos.x, pos.y);
 	};
 
 	const mouseUp = () => {
 		ctx.closePath();
-		const items = canvas.current?.toDataURL();
+		const items = canvas.toDataURL();
+
 		dispatch(save({type: 'Brush', save: items}));
 	};
 
 	const mouseMove = (e: MouseEvent) => {
-		if (e.buttons !== 1 || !ctx) return;
+		if (e.buttons !== 1) return;
 
 		ctx.lineTo(pos.x, pos.y);
 		ctx.stroke();
-		updCoord(e);
+		updCoords(e, pos);
 	};
 
 	return [mouseDown, mouseMove, mouseUp];

@@ -1,14 +1,22 @@
 import s from './ControlledCanvas.module.scss';
 import React, { RefObject, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import baseBrush from '../Brushes/baseBrush';
 import { AppDispatch } from '../../redux/store';
+import { brushType, IControlState } from '../../redux/slices/controlSlice';
+import square from '../Brushes/square';
 
 interface IUseControlledCanvas {
 	canvas: RefObject<HTMLCanvasElement>,
 	controlledCanvas: JSX.Element
 }
-const pos = { x: 0, y: 0 };
+
+export interface IPos {
+	x: number,
+	y: number
+}
+
+const pos: IPos = { x: 0, y: 0 };
 const fixRatio = 40;
 const res = [
 	(window.outerHeight - 71) - fixRatio,
@@ -17,13 +25,13 @@ const res = [
 
 const useControlledCanvas = (): IUseControlledCanvas => {
 	const dispatch = useDispatch();
+	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
 		if (canvas.current) {
-			// const mouseHandlers = getTool('Brush', canvas, pos, dispatch);
-			const [mouseDown, mouseMove, mouseUp] = getTool('Brush', canvas, pos, dispatch);
+			const [mouseDown, mouseMove, mouseUp] = getTool(tool.type, canvas.current, pos, dispatch);
 			canvas.current.addEventListener('mousedown', mouseDown);
 			canvas.current.addEventListener('mousemove', mouseMove);
 			canvas.current.addEventListener('mouseup', mouseUp);
@@ -31,9 +39,9 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 				canvas.current!.removeEventListener('mousedown', mouseDown);
 				canvas.current!.removeEventListener('mousemove', mouseMove);
 				canvas.current!.removeEventListener('mouseup', mouseUp);
-			}
+			};
 		}
-	}, []);
+	}, [tool.type]);
 
 	return {
 		canvas: canvas, controlledCanvas: (
@@ -45,11 +53,15 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 	};
 };
 
-const getTool = (type: string, canvas: RefObject<HTMLCanvasElement>, pos: {x:number, y:number}, dispatch: AppDispatch) => {
+const getTool = (type: brushType, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch) => {
 	switch (type) {
-		case 'Brush': return baseBrush({ canvas, pos, dispatch });
-		default: return baseBrush({ canvas, pos, dispatch });
+	case 'Brush':
+		return baseBrush({ canvas, pos, dispatch });
+	case 'Square':
+		return square({ canvas, pos, dispatch });;
+	default:
+		return baseBrush({ canvas, pos, dispatch });
 	}
-}
+};
 
 export default useControlledCanvas;

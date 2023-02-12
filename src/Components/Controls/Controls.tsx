@@ -1,7 +1,7 @@
 import s from './Controls.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions, IControlState } from '../../redux/slices/controlSlice';
-import { FC, RefObject } from 'react';
+import { actions, brushType, IControlState } from '../../redux/slices/controlSlice';
+import React, { FC, RefObject } from 'react';
 import { RiArrowGoBackFill, RiArrowGoForwardFill, RiPaintFill } from 'react-icons/ri';
 import { GiVacuumCleaner } from 'react-icons/gi';
 import { FaPaintBrush } from 'react-icons/fa';
@@ -13,7 +13,7 @@ interface IControls {
 	canvas: RefObject<HTMLCanvasElement>
 }
 
-const {move, step, clear} = actions;
+const {move, step, clear, tool} = actions;
 
 const Controls: FC<IControls> = ({canvas}) => {
 	const ctx: CanvasRenderingContext2D = canvas.current?.getContext('2d') as CanvasRenderingContext2D;
@@ -39,7 +39,6 @@ const Controls: FC<IControls> = ({canvas}) => {
 
 	const clearHandler = () => {
 		dispatch(clear());
-		console.log(ctx);
 		ctx.clearRect(0, 0, width, height);
 	};
 
@@ -51,11 +50,15 @@ const Controls: FC<IControls> = ({canvas}) => {
 		dispatch(move(i));
 	}
 
+	const selectTool = (type: brushType) => () => {
+		dispatch(tool(type));
+	}
+
 	return (
 		<div className={s.controls}>
 			<div className={s.tools}>
-				<button className={s.iconButton} onClick={undefined}><FaPaintBrush/></button>
-				<button className={s.iconButton} onClick={undefined}><IoMdSquare/></button>
+				<button className={s.iconButton} onClick={selectTool('Brush')}><FaPaintBrush/></button>
+				<button className={s.iconButton} onClick={selectTool('Square')}><IoMdSquare/></button>
 				<button className={s.iconButton} onClick={undefined}><BsCircleFill/></button>
 				<button className={s.iconButton} onClick={undefined}><HiOutlineMinus/></button>
 				<button className={s.iconButton} onClick={undefined}><BsFillTriangleFill/></button>
