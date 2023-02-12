@@ -1,11 +1,8 @@
-import { actions } from '../../redux/slices/controlSlice';
 import { ITool, IToolType } from './itool';
 import { updCoords } from './properties';
+import { defMouseUp } from './toolOrchestrator';
 
-const { save } = actions;
-
-const baseBrush = ({ canvas, pos, dispatch }: ITool): IToolType => {
-	const ctx = canvas.getContext('2d')!;
+const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	ctx.lineWidth = 15;
 	ctx.strokeStyle = 'black';
 	ctx.lineCap = 'round';
@@ -17,19 +14,11 @@ const baseBrush = ({ canvas, pos, dispatch }: ITool): IToolType => {
 		ctx.moveTo(pos.x, pos.y);
 	};
 
-	const mouseUp = () => {
-		ctx.closePath();
-		const items = canvas.toDataURL();
-
-		dispatch(save({type: 'Brush', save: items}));
-	};
+	const mouseUp = () => defMouseUp('Brush', ctx, dispatch, canvas)
 
 	const mouseMove = (e: MouseEvent) => {
-		if (e.buttons !== 1) return;
-
 		ctx.lineTo(pos.x, pos.y);
 		ctx.stroke();
-		updCoords(e, pos);
 	};
 
 	return [mouseDown, mouseMove, mouseUp];

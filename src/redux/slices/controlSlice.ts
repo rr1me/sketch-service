@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export type brushType = 'Brush' | 'Square' | 'Circle'
+export type brushType = 'Brush' | 'Square' | 'Circle' | 'Line' | 'Rectangle' | 'Fill'
 
 export interface IControlState {
 	history: {
@@ -44,7 +44,6 @@ const controlSlice = createSlice({
 		},
 		tool: ({ tool }, { payload }) => {
 			tool.type = payload;
-			console.log('q');
 		},
 	},
 });

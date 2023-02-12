@@ -59,10 +59,10 @@ const Controls: FC<IControls> = ({canvas}) => {
 			<div className={s.tools}>
 				<button className={s.iconButton} onClick={selectTool('Brush')}><FaPaintBrush/></button>
 				<button className={s.iconButton} onClick={selectTool('Square')}><IoMdSquare/></button>
-				<button className={s.iconButton} onClick={undefined}><BsCircleFill/></button>
-				<button className={s.iconButton} onClick={undefined}><HiOutlineMinus/></button>
-				<button className={s.iconButton} onClick={undefined}><BsFillTriangleFill/></button>
-				<button className={s.iconButton} onClick={undefined}><RiPaintFill/></button>
+				<button className={s.iconButton} onClick={selectTool('Circle')}><BsCircleFill/></button>
+				<button className={s.iconButton} onClick={selectTool('Line')}><HiOutlineMinus/></button>
+				<button className={s.iconButton} onClick={selectTool('Rectangle')}><BsFillTriangleFill/></button>
+				<button className={s.iconButton} onClick={selectTool('Fill')}><RiPaintFill/></button>
 			</div>
 
 			<div className={s.history}>
@@ -75,7 +75,7 @@ const Controls: FC<IControls> = ({canvas}) => {
 
 				{saves.length > 0 && saves.map((v,i) => {
 					return (
-						<button key={v.save} onClick={historyHandler(i)} className={s.historyButton + ' ' + (i > index ? s.historyButtonDark : null)}>
+						<button key={i} onClick={historyHandler(i)} className={s.historyButton + ' ' + (i > index ? s.historyButtonDark : null)}>
 							<span>{v.type}</span>
 							<span>{i}</span>
 						</button>

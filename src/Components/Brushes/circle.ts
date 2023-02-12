@@ -1,9 +1,9 @@
 import { ITool, IToolType } from './itool';
-import { updCoords } from './properties';
 import { IPos } from '../MainFrame/useControlledCanvas';
+import { updCoords } from './properties';
 import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
-const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
+const circle = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	ctx.fillStyle = '#ff8500'
 
 	const startPos: IPos = {x:0, y:0};
@@ -17,17 +17,22 @@ const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
 		saved = canvas.toDataURL();
 	};
 
-	const mouseUp = () => defMouseUp('Square', ctx, dispatch, canvas)
+	const mouseUp = () => defMouseUp('Circle', ctx, dispatch, canvas)
 
 	const mouseMove = async (e: MouseEvent) => {
 		await shapeSaver(saved, ctx, canvas.height, canvas.width)
 
+		const centerX = (pos.x + startPos.x)/2
+		const centerY = (pos.y + startPos.y)/2
+
+		const radius = Math.sqrt(Math.pow(Math.abs(startPos.x - pos.x), 2) + Math.pow(Math.abs(startPos.y - pos.y), 2))/2
+
 		ctx.beginPath();
-		ctx.rect(startPos.x, startPos.y, pos.x-startPos.x, pos.y-startPos.y);
+		ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
 		ctx.fill();
 	};
 
 	return [mouseDown, mouseMove, mouseUp];
 };
 
-export default square;
+export default circle;

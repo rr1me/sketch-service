@@ -3,8 +3,11 @@ import { updCoords } from './properties';
 import { IPos } from '../MainFrame/useControlledCanvas';
 import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
-const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
-	ctx.fillStyle = '#ff8500'
+const line = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
+	ctx.lineWidth = 15;
+	ctx.strokeStyle = 'green';
+	ctx.lineCap = 'square';
+	ctx.lineJoin = 'round';
 
 	const startPos: IPos = {x:0, y:0};
 	let saved = canvas.toDataURL();
@@ -17,17 +20,18 @@ const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
 		saved = canvas.toDataURL();
 	};
 
-	const mouseUp = () => defMouseUp('Square', ctx, dispatch, canvas)
+	const mouseUp = () => defMouseUp('Line', ctx, dispatch, canvas)
 
 	const mouseMove = async (e: MouseEvent) => {
 		await shapeSaver(saved, ctx, canvas.height, canvas.width)
 
 		ctx.beginPath();
-		ctx.rect(startPos.x, startPos.y, pos.x-startPos.x, pos.y-startPos.y);
-		ctx.fill();
+		ctx.moveTo(startPos.x, startPos.y);
+		ctx.lineTo(pos.x, pos.y);
+		ctx.stroke();
 	};
 
 	return [mouseDown, mouseMove, mouseUp];
 };
 
-export default square;
+export default line;

@@ -1,10 +1,8 @@
 import s from './ControlledCanvas.module.scss';
 import React, { RefObject, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import baseBrush from '../Brushes/baseBrush';
-import { AppDispatch } from '../../redux/store';
-import { brushType, IControlState } from '../../redux/slices/controlSlice';
-import square from '../Brushes/square';
+import { IControlState } from '../../redux/slices/controlSlice';
+import toolOrchestrator from '../Brushes/toolOrchestrator';
 
 interface IUseControlledCanvas {
 	canvas: RefObject<HTMLCanvasElement>,
@@ -31,7 +29,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 	useEffect(() => {
 		if (canvas.current) {
-			const [mouseDown, mouseMove, mouseUp] = getTool(tool.type, canvas.current, pos, dispatch);
+			const [mouseDown, mouseMove, mouseUp] = toolOrchestrator(tool.type, canvas.current, pos, dispatch);
 			canvas.current.addEventListener('mousedown', mouseDown);
 			canvas.current.addEventListener('mousemove', mouseMove);
 			canvas.current.addEventListener('mouseup', mouseUp);
@@ -51,17 +49,6 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 			/>
 		),
 	};
-};
-
-const getTool = (type: brushType, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch) => {
-	switch (type) {
-	case 'Brush':
-		return baseBrush({ canvas, pos, dispatch });
-	case 'Square':
-		return square({ canvas, pos, dispatch });;
-	default:
-		return baseBrush({ canvas, pos, dispatch });
-	}
 };
 
 export default useControlledCanvas;
