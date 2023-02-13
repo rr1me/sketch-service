@@ -3,8 +3,7 @@ import { updCoords } from './properties';
 import { defMouseUp } from './toolOrchestrator';
 
 const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
-	ctx.lineWidth = 15;
-	ctx.strokeStyle = 'black';
+	// ctx.lineWidth = 15;
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
 

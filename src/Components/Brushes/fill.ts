@@ -5,7 +5,6 @@ import { updCoords } from './properties';
 const { save } = actions;
 
 const fill = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
-	ctx.fillStyle = 'blue';
 
 	const mouseDown = (e: MouseEvent) => {
 		updCoords(e, pos);

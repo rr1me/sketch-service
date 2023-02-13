@@ -5,7 +5,6 @@ import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
 const line = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	ctx.lineWidth = 15;
-	ctx.strokeStyle = 'green';
 	ctx.lineCap = 'square';
 	ctx.lineJoin = 'round';
 

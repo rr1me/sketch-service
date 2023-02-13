@@ -1,17 +1,27 @@
-$bg-clr: #F8F8F8;
-$bord-clr: #D2D2D2;
-$border: 1px solid $bord-clr;
+@use '../../vars' as v;
 
-$fill-clr: #B3B3B3;
+@mixin sideBlock($left) {
+  border-radius: v.$br;
+  position: absolute;
+  top: 20vh;
 
-$br: 5px;
+  padding: 15px;
+  background-color: v.$bg-clr;
+  border: v.$border;
 
-.controls{
+  @if $left {
+    left: 40px;
+  } @else{
+    right: 40px;
+  }
+}
+
+.controls {
   font-family: Roboto;
   font-weight: 500;
 }
 
-.tools{
+.tools {
   position: absolute;
   top: 25px;
 
@@ -19,58 +29,55 @@ $br: 5px;
 
   padding: 10px;
   background-color: #f8f8f8;
-  border: $border;
+  border: v.$border;
 
   display: flex;
   gap: 5px;
 
-  border-radius: $br;
+  border-radius: v.$br;
 }
 
-button{
+button {
   font-weight: 500;
 
-
-  border-radius: $br;
+  border-radius: v.$br;
   background-color: white;
-  border: $border;
+  border: v.$border;
 }
 
-.history{
-  border-radius: 5px;
-  position: absolute;
-  top: 20vh;
-  left: 40px;
-
-  padding: 15px;
-  background-color: $bg-clr;
-  border: $border;
+.history {
+  @include sideBlock(true);
 
   display: flex;
   flex-direction: column;
   gap: 10px
 }
 
-.historyCtrl{
+.historyCtrl {
   display: flex;
   gap: 2px;
-  span{
+
+  span {
     margin-right: 5px;
   }
 }
 
-.iconButton{
+.iconButton {
   padding: 3px 6px;
   display: flex;
 }
 
-.historyButton{
+.historyButton {
   font-size: 14px;
   display: flex;
   justify-content: space-between;
   padding: 2px 10px;
 }
 
-.historyButtonDark{
-  background-color: $fill-clr;
+.historyButtonDark {
+  background-color: v.$fill-clr;
+}
+
+.settings {
+  @include sideBlock(false);
 }

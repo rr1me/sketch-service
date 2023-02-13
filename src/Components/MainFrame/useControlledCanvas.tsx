@@ -29,7 +29,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 	useEffect(() => {
 		if (canvas.current) {
-			const [mouseDown, mouseMove, mouseUp] = toolOrchestrator(tool.type, canvas.current, pos, dispatch);
+			const [mouseDown, mouseMove, mouseUp] = toolOrchestrator(tool, canvas.current, pos, dispatch);
 			canvas.current.addEventListener('mousedown', mouseDown);
 			canvas.current.addEventListener('mousemove', mouseMove);
 			canvas.current.addEventListener('mouseup', mouseUp);
@@ -39,7 +39,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 				canvas.current!.removeEventListener('mouseup', mouseUp);
 			};
 		}
-	}, [tool.type]);
+	}, [tool]);
 
 	return {
 		canvas: canvas, controlledCanvas: (

@@ -4,7 +4,6 @@ import { IPos } from '../MainFrame/useControlledCanvas';
 import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
 const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
-	ctx.fillStyle = '#ff8500'
 
 	const startPos: IPos = {x:0, y:0};
 	let saved = canvas.toDataURL();
