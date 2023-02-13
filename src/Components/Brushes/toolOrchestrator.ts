@@ -29,6 +29,7 @@ const toolOrchestrator = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos
 		updCoords(e, pos);
 	};
 	const outMouseUp = (e: MouseEvent) => {
+		if (!pressed) return;
 		pressed = false;
 		mouseUp(e);
 	}
@@ -40,7 +41,7 @@ const getTool = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos, dispatc
 	const type = tool.type;
 	switch (type) {
 	case 'Brush':
-		ctx.lineWidth = tool.params.brush.width
+		ctx.lineWidth = tool.params.width
 		return baseBrush({ canvas, pos, dispatch, ctx });
 	case 'Square':
 		return square({ canvas, pos, dispatch, ctx });

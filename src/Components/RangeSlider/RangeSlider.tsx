@@ -21,20 +21,22 @@ const RangeSlider: FC<IRangeSlider> = ({start, end, onChange}) => {
 		const mouseMove = (e: MouseEvent) => {
 			if (!pressed.current) return;
 
-			const [range, fillPercent, position] = getRangeData(sliderRef, e);
+			const {range, position} = getRangeData(sliderRef, e);
 
 			setWidth(() => {
 				if (position < 0) return 0;
 				if (position > range) return range;
 				return position;
 			});
-
+		};
+		const mouseUp = (e: MouseEvent) => {
+			if (!pressed.current) return;
+			const {fillPercent} = getRangeData(sliderRef, e);
 			const stepsRatio = (end - start)/100;
 
 			const v = stepsRatio*fillPercent;
 			onChange(v < start ? start : v);
-		};
-		const mouseUp = () => {
+
 			pressed.current = false;
 		};
 		document.body.addEventListener('mousemove', mouseMove);
@@ -69,7 +71,7 @@ const getRangeData = (sliderRef: RefObject<HTMLDivElement>, e: MouseEvent) => {
 
 	console.log(startX, endX, currentX, range, position, fillPercent);
 
-	return [range, fillPercent, position];
+	return {range, fillPercent, position};
 };
 
 const getFP = (x: number) => {

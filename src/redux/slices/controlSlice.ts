@@ -1,19 +1,18 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 
+
 export type brushType = 'Brush' | 'Square' | 'Circle' | 'Line' | 'Rectangle' | 'Fill'
 
-interface IBrush {
+export interface IBrush {
 	width: number
 }
 
-interface IParams {
-	brush: IBrush,
-}
+type paramsType = IBrush;
 
 export interface IToolParam {
 	type: brushType,
 	color: string,
-	params: IParams
+	params: paramsType
 }
 
 export interface IControlState {
@@ -35,9 +34,7 @@ const controlSlice = createSlice({
 			type: 'Brush',
 			color: '#000000',
 			params: {
-				brush: {
-					width: 15,
-				},
+				width: 15,
 
 			},
 		},
@@ -64,13 +61,12 @@ const controlSlice = createSlice({
 		tool: ({ tool }, { payload }) => {
 			tool.type = payload;
 		},
-		param: ({ tool }, { payload }: { payload: [keyof typeof tool, any] }) => {
+		param: ({ tool }, { payload }: { payload: [keyof IToolParam, any] }) => {
 			tool[payload[0]] = payload[1];
 		},
-		toolParam: ({ tool: { params } }, { payload }: { payload: {tool: keyof typeof params, param: keyof IBrush, value: any} }) => {
-			const {tool, param, value} = payload;
-			params[tool][param] = value
-			console.log(current(params.brush));
+		toolParam: ({ tool: { params } }, { payload }: { payload: {param: keyof paramsType, value: any} }) => {
+			const {param, value} = payload;
+			params[param] = value;
 		},
 	},
 });

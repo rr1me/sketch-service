@@ -1,6 +1,6 @@
 import s from './Controls.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions, brushType, IControlState } from '../../redux/slices/controlSlice';
+import { actions, brushType, IControlState, IToolParam } from '../../redux/slices/controlSlice';
 import React, { FC, RefObject } from 'react';
 import { RiArrowGoBackFill, RiArrowGoForwardFill, RiPaintFill } from 'react-icons/ri';
 import { GiVacuumCleaner } from 'react-icons/gi';
@@ -59,12 +59,12 @@ const Controls: FC<IControls> = ({ canvas }) => {
 		dispatch(tool(type));
 	};
 
-	const setParam = (type: any) => (newColor: string) => {
+	const setParam = (type: keyof IToolParam) => (newColor: string) => {
 		dispatch(param([type, newColor]));
 	};
 
 	const onWidthHandler = (v: number) => {
-		dispatch(toolParam({ tool: 'brush', param: 'width', value: v }));
+		dispatch(toolParam({ param: 'width', value: v }));
 	};
 
 	return (
