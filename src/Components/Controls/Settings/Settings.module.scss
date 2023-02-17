@@ -1,0 +1,5 @@
+@use '../ControlsGlobal.module' as g;
+
+.settings {
+  @include g.sideBlock(false);
+}

@@ -42,6 +42,7 @@ const getTool = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos, dispatc
 	switch (type) {
 	case 'Brush':
 		ctx.lineWidth = tool.params.width
+		ctx.globalAlpha = tool.params.opacity
 		return baseBrush({ canvas, pos, dispatch, ctx });
 	case 'Square':
 		return square({ canvas, pos, dispatch, ctx });
@@ -69,8 +70,13 @@ export const shapeSaver = async (saved: string, ctx: CanvasRenderingContext2D, h
 	const img = new Image();
 	img.src = saved;
 	await img.onload;
+
+	const oldGA = ctx.globalAlpha;
+
+	ctx.globalAlpha = 1
 	ctx.clearRect(0, 0, width, height);
 	ctx.drawImage(img, 0, 0, width, height);
+	ctx.globalAlpha = oldGA;
 };
 
 export default toolOrchestrator;

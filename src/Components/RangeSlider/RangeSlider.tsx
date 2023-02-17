@@ -2,15 +2,17 @@ import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
 import s from './RangeSlider.module.scss';
 
 interface IRangeSlider {
+	name: string
 	start: number,
 	end: number,
 	onChange: (v: number) => void
 }
 
-const RangeSlider: FC<IRangeSlider> = ({start, end, onChange}) => {
+const RangeSlider: FC<IRangeSlider> = ({name, start, end, onChange}) => {
 
 	const sliderRef = useRef<HTMLDivElement>(null);
 	const [width, setWidth] = useState(15);
+	const value = useRef(0);
 
 	const pressed = useRef(false);
 	const mouseDown = () => {
@@ -21,7 +23,11 @@ const RangeSlider: FC<IRangeSlider> = ({start, end, onChange}) => {
 		const mouseMove = (e: MouseEvent) => {
 			if (!pressed.current) return;
 
-			const {range, position} = getRangeData(sliderRef, e);
+			const {range,fillPercent ,position} = getRangeData(sliderRef, e);
+
+			const stepsRatio = (end - start)/100;
+			const v = stepsRatio*fillPercent;
+			value.current = v;
 
 			setWidth(() => {
 				if (position < 0) return 0;
@@ -54,7 +60,10 @@ const RangeSlider: FC<IRangeSlider> = ({start, end, onChange}) => {
 			 onMouseDown={mouseDown}
 		>
 			<div className={s.sliderInner} style={{ width: width }} />
-			<span className={s.label}>Width</span>
+			<div className={s.data}>
+				<span className={s.label}>{name}</span>
+				<span className={s.value}>{Math.round(value.current * 100) / 100}</span>
+			</div>
 		</div>
 	);
 };

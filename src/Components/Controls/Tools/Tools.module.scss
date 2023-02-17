@@ -1,0 +1,22 @@
+@use '../ControlsGlobal.module' as g;
+@use '../../../vars' as v;
+
+.tools {
+  position: absolute;
+  top: 25px;
+
+  left: 450px;
+
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: v.$border;
+
+  display: flex;
+  gap: 5px;
+
+  border-radius: v.$br;
+}
+
+.iconButton{
+  @include g.iconButton
+}

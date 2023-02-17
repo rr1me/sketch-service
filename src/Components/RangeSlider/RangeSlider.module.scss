@@ -32,6 +32,17 @@
   height: 20px;
 }
 
-.label{
+.data{
   z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
+
+//.label{
+//  z-index: 1;
+//}
+//
+//.value{
+//  z-index: 1;
+//}

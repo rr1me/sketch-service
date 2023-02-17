@@ -4,7 +4,8 @@ import { createSlice, current } from '@reduxjs/toolkit';
 export type brushType = 'Brush' | 'Square' | 'Circle' | 'Line' | 'Rectangle' | 'Fill'
 
 export interface IBrush {
-	width: number
+	width: number,
+	opacity: number
 }
 
 type paramsType = IBrush;
@@ -35,7 +36,7 @@ const controlSlice = createSlice({
 			color: '#000000',
 			params: {
 				width: 15,
-
+				opacity: 1
 			},
 		},
 	} as IControlState,

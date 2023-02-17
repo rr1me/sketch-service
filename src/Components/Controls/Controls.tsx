@@ -1,108 +1,26 @@
 import s from './Controls.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { actions, brushType, IControlState, IToolParam } from '../../redux/slices/controlSlice';
 import React, { FC, RefObject } from 'react';
-import { RiArrowGoBackFill, RiArrowGoForwardFill, RiPaintFill } from 'react-icons/ri';
-import { GiVacuumCleaner } from 'react-icons/gi';
-import { FaPaintBrush } from 'react-icons/fa';
-import { IoMdSquare } from 'react-icons/io';
-import { BsCircleFill, BsFillTriangleFill } from 'react-icons/bs';
-import { HiOutlineMinus } from 'react-icons/hi';
-import { HexColorPicker } from 'react-colorful';
-import RangeSlider from '../RangeSlider/RangeSlider';
+import History from './History/History';
+import Settings from './Settings/Settings';
+import Tools from './Tools/Tools';
 
-interface IControls {
+export interface IControls {
 	canvas: RefObject<HTMLCanvasElement>;
 }
 
-const { move, step, clear, tool, param, toolParam } = actions;
-
 const Controls: FC<IControls> = ({ canvas }) => {
-	const ctx: CanvasRenderingContext2D = canvas.current?.getContext('2d') as CanvasRenderingContext2D;
-	const width = canvas.current?.width as number;
-	const height = canvas.current?.height as number;
-	const dispatch = useDispatch();
-	const {
-		history: { saves, index },
-		tool: { color },
-	} = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
-
-	const draw = async (index: number) => {
-		const img = new Image();
-
-		img.src = saves[index].save;
-		await img.onload;
-		ctx.clearRect(0, 0, width, height);
-		ctx.drawImage(img, 0, 0);
-	};
-
-	const redraw = async (direction: boolean) => {
-		const d = direction ? 1 : -1;
-		await draw(index - d);
-		dispatch(step(d));
-	};
-
-	const clearHandler = () => {
-		dispatch(clear());
-		ctx.clearRect(0, 0, width, height);
-	};
-
-	const undoHandler = () => index > 0 && redraw(true);
-	const redoHandler = () => saves.length - 1 > index && redraw(false);
-
-	const historyHandler = (i: number) => async () => {
-		await draw(i);
-		dispatch(move(i));
-	};
-
-	const selectTool = (type: brushType) => () => {
-		dispatch(tool(type));
-	};
-
-	const setParam = (type: keyof IToolParam) => (newColor: string) => {
-		dispatch(param([type, newColor]));
-	};
-
-	const onWidthHandler = (v: number) => {
-		dispatch(toolParam({ param: 'width', value: v }));
-	};
 
 	return (
 		<div className={s.controls}>
-			<div className={s.tools}>
-				<button className={s.iconButton} onClick={selectTool('Brush')}><FaPaintBrush /></button>
-				<button className={s.iconButton} onClick={selectTool('Square')}><IoMdSquare /></button>
-				<button className={s.iconButton} onClick={selectTool('Circle')}><BsCircleFill /></button>
-				<button className={s.iconButton} onClick={selectTool('Line')}><HiOutlineMinus /></button>
-				<button className={s.iconButton} onClick={selectTool('Rectangle')}><BsFillTriangleFill /></button>
-				<button className={s.iconButton} onClick={selectTool('Fill')}><RiPaintFill /></button>
-			</div>
+			<Tools/>
 
-			<div className={s.history}>
-				<div className={s.historyCtrl}>
-					<span>History</span>
-					<button className={s.iconButton} onClick={undoHandler}><RiArrowGoBackFill /></button>
-					<button className={s.iconButton} onClick={redoHandler}><RiArrowGoForwardFill /></button>
-					<button className={s.iconButton} onClick={clearHandler}><GiVacuumCleaner /></button>
-				</div>
-
-				{saves.length > 0 && saves.map((v, i) => {
-					return (
-						<button key={i} onClick={historyHandler(i)}
-								className={s.historyButton + ' ' + (i > index ? s.historyButtonDark : null)}>
-							<span>{v.type}</span>
-							<span>{i}</span>
-						</button>
-					);
-				})}
-			</div>
-
-			<div className={s.settings}>
-				<HexColorPicker color={color} onChange={setParam('color')} />
-				<RangeSlider start={1} end={50} onChange={onWidthHandler} />
-			</div>
-
-
+			{/* <button className={s.historyOpener} onClick={openHandler('history', true)} */}
+			{/* 		style={(history ? {transition: 'opacity 0.5s',opacity: 0} : {transition: 'opacity 0.5s'})} */}
+			{/* > */}
+			{/* 	{ic.rightArrow} */}
+			{/* </button> */}
+			<History canvas={canvas}/>
+			<Settings/>
 		</div>
 	);
 };
