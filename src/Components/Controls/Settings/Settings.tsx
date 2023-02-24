@@ -10,7 +10,6 @@ const { param, toolParam } = actions;
 const Settings: FC = () => {
 	const dispatch = useDispatch();
 	const {
-		// history: { saves, index },
 		tool: { color },
 	} = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
@@ -25,7 +24,7 @@ const Settings: FC = () => {
 			<RangeSlider name={'Width'} start={1} end={50} onChange={toolParamHandler('width')} />
 			<RangeSlider name={'Opacity'} start={0} end={1} onChange={toolParamHandler('opacity')} />
 		</div>
-	)
+	);
 };
 
 export default Settings;

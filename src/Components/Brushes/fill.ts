@@ -1,13 +1,11 @@
 import { actions } from '../../redux/slices/controlSlice';
 import { ITool, IToolType } from './itool';
-import { updCoords } from './properties';
 
 const { save } = actions;
 
 const fill = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 
 	const mouseDown = (e: MouseEvent) => {
-		updCoords(e, pos);
 		ctx.beginPath();
 
 		ctx.rect(0,0,canvas.width,canvas.height);

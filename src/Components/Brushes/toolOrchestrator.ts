@@ -20,13 +20,14 @@ const toolOrchestrator = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos
 	const [mouseDown, mouseMove, mouseUp] = getTool(tool, canvas, pos, dispatch, ctx);
 
 	const outMouseDown = (e: MouseEvent) => {
+		updCoords(e, pos, canvas);
 		pressed = true;
 		mouseDown(e);
 	}
 	const outMouseMove = async (e: MouseEvent) => {
 		if (e.buttons !== 1 || !pressed) return;
 		mouseMove(e);
-		updCoords(e, pos);
+		updCoords(e, pos, canvas);
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;

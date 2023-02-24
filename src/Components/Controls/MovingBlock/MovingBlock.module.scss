@@ -1,0 +1,42 @@
+@use '../../../vars' as v;
+
+.wrapper{
+  pointer-events: none;
+  position: absolute;
+  top: 20vh;
+
+  display: flex;
+}
+
+.openButton{
+  pointer-events: auto;
+  height: max-content;
+  padding: 5px;
+  transition: opacity 150ms;
+
+  //font-family: 'Roboto';
+  //font-style: normal;
+  //font-weight: 400;
+  //font-size: 12px;
+  line-height: 90%;
+
+  //border: v.$border;
+}
+.opened{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.block{
+  pointer-events: auto;
+  position: relative;
+  margin-left: 20px;
+
+  transition: 0.5s;
+
+  transform: translateX(0)
+}
+
+.blockOutside{
+  transform: translateX(-120%);
+}

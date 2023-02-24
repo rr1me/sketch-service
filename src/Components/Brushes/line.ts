@@ -1,5 +1,4 @@
 import { ITool, IToolType } from './itool';
-import { updCoords } from './properties';
 import { IPos } from '../MainFrame/useControlledCanvas';
 import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
@@ -12,7 +11,6 @@ const line = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	let saved = canvas.toDataURL();
 
 	const mouseDown = (e: MouseEvent) => {
-		updCoords(e, pos);
 		startPos.x = pos.x
 		startPos.y = pos.y
 

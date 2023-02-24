@@ -1,9 +1,7 @@
 import { ITool, IToolType } from './itool';
-import { updCoords } from './properties';
 import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
 const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
-	// ctx.lineWidth = 15;
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
 
@@ -12,7 +10,6 @@ const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	let saved = canvas.toDataURL();
 
 	const mouseDown = (e: MouseEvent) => {
-		updCoords(e, pos);
 		ctx.beginPath();
 		ctx.moveTo(pos.x, pos.y);
 

@@ -1,3 +1,5 @@
-.app{
+@use './vars' as v;
 
+.app{
+  background-color: v.$fill-clr;
 }

@@ -1,6 +1,11 @@
+@use '../../vars' as v;
+
 .canvas{
   image-rendering: pixelated;
   //image-rendering: crisp-edges;
-  margin: 20px;
-  box-shadow: 0 0 5px black;
+  margin: 25px;
+  //box-shadow: 0 0 5px black;
+  background-color: white;
+  border: v.$border;
+  border-radius: v.$br;
 }

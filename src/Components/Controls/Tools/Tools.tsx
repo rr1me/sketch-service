@@ -22,7 +22,7 @@ const Tools: FC = () => {
 			<button className={s.iconButton} onClick={selectTool('Rectangle')}>{ic.triangle}</button>
 			<button className={s.iconButton} onClick={selectTool('Fill')}>{ic.fill}</button>
 		</div>
-	)
+	);
 };
 
 export default Tools;

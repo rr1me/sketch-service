@@ -2,18 +2,18 @@
 
 @mixin sideBlock($left) {
   border-radius: v.$br;
-  position: absolute;
-  top: 20vh;
+  //position: absolute;
+  //top: 20vh;
 
   padding: 15px;
   background-color: v.$bg-clr;
   border: v.$border;
 
-  @if $left {
-    left: 40px;
-  } @else{
-    right: 40px;
-  }
+  //@if $left {
+  //  left: 40px;
+  //} @else{
+  //  right: 40px;
+  //}
 }
 
 @mixin iconButton {
