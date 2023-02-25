@@ -4,9 +4,6 @@ import { defMouseUp, shapeSaver } from './toolOrchestrator';
 const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	ctx.lineCap = 'round';
 	ctx.lineJoin = 'round';
-
-	// ctx.globalAlpha = 0.1
-
 	let saved = canvas.toDataURL();
 
 	const mouseDown = (e: MouseEvent) => {
@@ -22,10 +19,6 @@ const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 		ctx.lineTo(pos.x, pos.y);
 		await shapeSaver(saved, ctx, canvas.height, canvas.width)
 		ctx.stroke();
-		// ctx.beginPath();
-		// ctx.arc(pos.x, pos.y, 5, 0, 2 * Math.PI, false);
-		// ctx.fill();
-		// ctx.closePath();
 	};
 
 	return [mouseDown, mouseMove, mouseUp];

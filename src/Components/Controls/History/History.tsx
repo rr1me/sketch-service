@@ -50,23 +50,18 @@ const History: FC<IHistory> = ({ canvas }) => {
 		dispatch(move(i));
 	};
 
-	const [open, setOpen] = useState(false);
-
-	const openHandler = () => {
-		setOpen(v => !v);
-		// ctx.scale(0.5, 0.5);
-		console.log('/');
-	};
+	// const [open, setOpen] = useState(false);
+	// const openHandler = () => setOpen(v => !v);
 
 	return (
-		<MovingBlock open={open} openHandler={openHandler} name={'History'}>
+		<MovingBlock name={'History'} side={'left'} outsideOffset={120} gap={20}>
 			<div className={s.history}>
 				<div className={s.historyCtrl}>
 					<span>History</span>
 					<button className={s.iconButton} onClick={undoHandler}>{ic.arrowBack}</button>
 					<button className={s.iconButton} onClick={redoHandler}>{ic.arrowForward}</button>
 					<button className={s.iconButton} onClick={clearHandler}>{ic.clean}</button>
-					<button className={s.iconButton} onClick={openHandler}>{ic.leftArrow}</button>
+					{/* <button className={s.iconButton} onClick={openHandler}>{ic.leftArrow}</button> */}
 				</div>
 
 				{saves.length > 0 && saves.map((v, i) => {
