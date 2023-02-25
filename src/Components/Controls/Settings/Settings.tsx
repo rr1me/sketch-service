@@ -19,9 +19,6 @@ const Settings: FC = () => {
 	};
 	const toolParamHandler = (param: keyof IBrush) => (v: number) => dispatch(toolParam({ param: param, value: v }));
 
-	// const [open, setOpen] = useState(false);
-	// const openHandler = () => setOpen(v => !v);
-
 	return (
 		<MovingBlock name={'Settings'} side={'right'} outsideOffset={120} gap={20}>
 			<div className={s.settings}>

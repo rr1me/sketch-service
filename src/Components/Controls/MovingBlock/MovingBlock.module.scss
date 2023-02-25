@@ -3,21 +3,14 @@
 .wrapper{
   pointer-events: none;
   position: absolute;
-
-  //display: flex;
 }
 
 .openButton{
   pointer-events: auto;
   height: max-content;
   padding: 5px;
-  //transition: opacity 150ms;
   line-height: 90%;
 }
-//.opened{
-//  //opacity: 0;
-//  //pointer-events: none;
-//}
 
 .block{
   pointer-events: auto;
@@ -28,21 +21,15 @@
   transform: translateX(0) translateY(0);
 }
 
-//.blockOutside{
-//  transform: translateX(-120%);
-//}
-
 .top{
   left: 20vw;
 }
 .bottom{
 
 }
-
 .left{
   display: flex;
   top: 20vh;
-  //margin-left: 20px;
 }
 .right{
   display: flex;

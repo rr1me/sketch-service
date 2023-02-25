@@ -1,7 +1,9 @@
 import s from './MovingBlock.module.scss';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 
 type side = 'top' | 'bottom' | 'left' | 'right';
+
+const PE = {pointerEvents: 'none'};
 
 const MovingBlock = ({
 	children,
@@ -11,7 +13,27 @@ const MovingBlock = ({
 	gap,
 }: { children: React.ReactNode, name: string, side: side, outsideOffset: number, gap: number }) => {
 	const [open, setOpen] = useState(false);
-	const openHandler = () => setOpen(v => !v);
+	const [pointerEvents, setPointerEvents] = useState<object | null>(PE);
+	const openHandler = () => {
+		setOpen(v => {
+			// const value = !v;
+
+			if (!v){
+				setTimeout(() => {
+					setPointerEvents(null);
+				}, 300)
+			}else{
+				setPointerEvents(PE);
+			}
+
+			return !v;
+		});
+	};
+
+	useLayoutEffect(() => {
+		// d
+
+	}, [])
 
 	const convertName = () =>
 		name.split('').map((v, i) => <React.Fragment key={i}>{v}<br /></React.Fragment>);
@@ -40,26 +62,16 @@ const MovingBlock = ({
 
 	const getOutsideStyle = () => {
 		if (open) return undefined;
-		let style: object = {pointerEvents: 'none'};
 		switch (side) {
 		case 'top':
-			style = {...style, ...{ transform: 'translateY(-' + outsideOffset + '%)' }};
-			break;
+			return { transform: 'translateY(-' + outsideOffset + '%)' };
 		case 'bottom':
-			style = {...style, ...{ transform: 'translateY(' + outsideOffset + '%)' }};
-			break;
+			return { transform: 'translateY(' + outsideOffset + '%)' };
 		case 'left':
-			style = {...style, ...{ transform: 'translateX(-' + outsideOffset + '%)' }};
-			break;
+			return { transform: 'translateX(-' + outsideOffset + '%)' };
 		case 'right':
-			style = {...style, ...{ transform: 'translateX(' + outsideOffset + '%)' }};
-			break;
+			return { transform: 'translateX(' + outsideOffset + '%)' };
 		}
-		setTimeout(() => {
-			
-		}, 500)
-
-		return style;
 	};
 
 	const getGap = () => {
@@ -80,39 +92,13 @@ const MovingBlock = ({
 
 	return (
 		<div className={s.wrapper + getSideStyle()}>
-			<button className={
-				// s.openButton
-				// + (open ? ' ' + s.opened : '')
-				// +
-				getButtonStyle()
-			}
+			<button className={getButtonStyle()}
 					onClick={openHandler}>{getName()}</button>
-			<div className={s.block
-				// + (!open ? ' ' + s.blockOutside : '')
-			} style={{ ...getOutsideStyle(), ...getGap() }}>
+			<div className={s.block} style={{ ...getOutsideStyle(), ...getGap(), ...pointerEvents }}>
 				{children}
 			</div>
 		</div>
 	);
 };
-
-// const getStyle = (side: side, styleType: styleType) => {
-// 	let style = ' ';
-// 	switch (side) {
-// 	case 'top':
-// 		style += styleType === 'in' ? s.top : s.topOutside;
-// 		break;
-// 	case 'bottom':
-// 		style += styleType === 'in' ? s.bottom : s.bottomOutside;
-// 		break;
-// 	case 'left':
-// 		style += styleType === 'in' ? s.left : s.leftOutside;
-// 		break;
-// 	case 'right':
-// 		style += styleType === 'in' ? s.right : s.rightOutside;
-// 		break;
-// 	}
-// 	return style;
-// }
 
 export default MovingBlock;

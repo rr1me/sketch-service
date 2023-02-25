@@ -1,6 +1,6 @@
 import s from './History.module.scss';
 import ic from '../../Icons/Icons';
-import React, { FC, RefObject, useState } from 'react';
+import React, { FC, RefObject } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, IControlState } from '../../../redux/slices/controlSlice';
 import MovingBlock from '../MovingBlock/MovingBlock';
@@ -8,8 +8,6 @@ import MovingBlock from '../MovingBlock/MovingBlock';
 interface IHistory {
 	canvas: RefObject<HTMLCanvasElement>
 }
-
-// type openerType = 'history' | 'params'
 
 const { move, step, clear } = actions;
 
@@ -50,9 +48,6 @@ const History: FC<IHistory> = ({ canvas }) => {
 		dispatch(move(i));
 	};
 
-	// const [open, setOpen] = useState(false);
-	// const openHandler = () => setOpen(v => !v);
-
 	return (
 		<MovingBlock name={'History'} side={'left'} outsideOffset={120} gap={20}>
 			<div className={s.history}>
@@ -61,9 +56,7 @@ const History: FC<IHistory> = ({ canvas }) => {
 					<button className={s.iconButton} onClick={undoHandler}>{ic.arrowBack}</button>
 					<button className={s.iconButton} onClick={redoHandler}>{ic.arrowForward}</button>
 					<button className={s.iconButton} onClick={clearHandler}>{ic.clean}</button>
-					{/* <button className={s.iconButton} onClick={openHandler}>{ic.leftArrow}</button> */}
 				</div>
-
 				{saves.length > 0 && saves.map((v, i) => {
 					return (
 						<button key={i} onClick={historyHandler(i)}
