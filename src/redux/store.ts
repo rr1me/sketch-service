@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
 import controlSlice from './slices/controlSlice';
+import baseBrushSlice from './slices/baseBrushSlice';
 
 export const store = configureStore({
-	reducer: { controlSlice },
+	reducer: { controlSlice, baseBrushSlice },
 });
 
 export default store;

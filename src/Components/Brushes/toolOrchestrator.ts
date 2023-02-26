@@ -8,8 +8,9 @@ import rectangle from './rectangle';
 import fill from './fill';
 import { IPos } from '../MainFrame/useControlledCanvas';
 import { updCoords } from './properties';
+import { IParamObject } from '../../redux/slices/INumberParam';
 
-const toolOrchestrator = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch) => {
+const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch) => {
 	const ctx = canvas.getContext('2d')!;
 
 	ctx.strokeStyle = tool.color;
@@ -17,7 +18,7 @@ const toolOrchestrator = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos
 
 	let pressed = false;
 
-	const [mouseDown, mouseMove, mouseUp] = getTool(tool, canvas, pos, dispatch, ctx);
+	const [mouseDown, mouseMove, mouseUp] = getTool(tool, params, canvas, pos, dispatch, ctx);
 
 	const outMouseDown = (e: MouseEvent) => {
 		updCoords(e, pos, canvas);
@@ -38,12 +39,12 @@ const toolOrchestrator = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos
 	return [outMouseDown, outMouseMove, outMouseUp];
 };
 
-const getTool = (tool: IToolParam, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, ctx: CanvasRenderingContext2D) => {
+const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, ctx: CanvasRenderingContext2D) => {
 	const type = tool.type;
 	switch (type) {
 	case 'Brush':
-		ctx.lineWidth = tool.params.width
-		ctx.globalAlpha = tool.params.opacity
+		ctx.lineWidth = params.width.v;
+		ctx.globalAlpha = params.opacity.v;
 		return baseBrush({ canvas, pos, dispatch, ctx });
 	case 'Square':
 		return square({ canvas, pos, dispatch, ctx });
