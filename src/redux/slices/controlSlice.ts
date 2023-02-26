@@ -17,7 +17,7 @@ export type paramsType = IBrush;
 export interface IToolParam {
 	type: brushType,
 	color: string,
-	params: paramsType
+	opacity: number
 }
 
 // interface IParam<T extends number | boolean> {
@@ -43,10 +43,7 @@ const controlSlice = createSlice({
 		tool: {
 			type: 'Brush',
 			color: '#000000',
-			params: {
-				width: 15,
-				opacity: 1,
-			},
+			opacity: 1
 		},
 	} as IControlState,
 	reducers: {
@@ -77,10 +74,13 @@ const controlSlice = createSlice({
 		setColor: ({ tool }, { payload }: { payload: string }) => {
 			tool.color = payload;
 		},
-		toolParam: ({ tool: { params } }, { payload }: { payload: { param: keyof paramsType, value: any } }) => {
-			const { param, value } = payload;
-			params[param] = value;
-		},
+		setOpacity: ({tool}, {payload} : {payload: number}) => {
+			tool.opacity = payload;
+		}
+		// toolParam: ({ tool: { params } }, { payload }: { payload: { param: keyof paramsType, value: any } }) => {
+		// 	const { param, value } = payload;
+		// 	params[param] = value;
+		// },
 	},
 });
 

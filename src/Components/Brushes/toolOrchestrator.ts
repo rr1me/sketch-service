@@ -40,11 +40,11 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 };
 
 const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, ctx: CanvasRenderingContext2D) => {
+	ctx.globalAlpha = tool.opacity;
 	const type = tool.type;
 	switch (type) {
 	case 'Brush':
 		ctx.lineWidth = params.width.v;
-		ctx.globalAlpha = params.opacity.v;
 		return baseBrush({ canvas, pos, dispatch, ctx });
 	case 'Square':
 		return square({ canvas, pos, dispatch, ctx });

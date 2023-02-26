@@ -1,11 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IBaseBrushSlice, INumberParam } from './INumberParam';
+import { INumberParam } from './INumberParam';
 
-// interface IBaseBrushSlice {
-// 	width: INumberParam,
-// 	opacity: INumberParam,
-// 	test: boolean
-// }
+export interface IBaseBrushSlice {
+	width: INumberParam
+}
 
 const baseBrushSlice = createSlice({
 	name: 'baseBrushSlice',
@@ -14,13 +12,7 @@ const baseBrushSlice = createSlice({
 			v: 5,
 			start: 1,
 			end: 50,
-		},
-		opacity: {
-			v: 1,
-			start: 0,
-			end: 1,
-		},
-		test: true,
+		}
 	} as IBaseBrushSlice,
 	reducers: {
 		setParam: (state: any, { payload }: { payload: { param: keyof IBaseBrushSlice, value: number | boolean } }) => {

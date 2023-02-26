@@ -3,11 +3,11 @@
 //
 // }
 
-export interface IBaseBrushSlice {
-	width: INumberParam,
-	opacity: INumberParam,
-	test: boolean
-}
+// export interface IBaseBrushSlice {
+// 	width: INumberParam
+// }
+
+import { IBaseBrushSlice } from './baseBrushSlice';
 
 export interface INumberParam {
 	v: number,
