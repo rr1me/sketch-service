@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from 'react';
 
 type side = 'top' | 'bottom' | 'left' | 'right';
 
-const PE = {pointerEvents: 'none'};
+const PE = { pointerEvents: 'none' };
 
 const MovingBlock = ({
 	children,
@@ -18,11 +18,11 @@ const MovingBlock = ({
 		setOpen(v => {
 			// const value = !v;
 
-			if (!v){
+			if (!v) {
 				setTimeout(() => {
 					setPointerEvents(null);
-				}, 300)
-			}else{
+				}, 300);
+			} else {
 				setPointerEvents(PE);
 			}
 
@@ -33,7 +33,7 @@ const MovingBlock = ({
 	useLayoutEffect(() => {
 		// d
 
-	}, [])
+	}, []);
 
 	const convertName = () =>
 		name.split('').map((v, i) => <React.Fragment key={i}>{v}<br /></React.Fragment>);
@@ -58,7 +58,7 @@ const MovingBlock = ({
 	};
 
 	const getButtonStyle = () =>
-		s.openButton + (side == 'right' || side == 'bottom' ? ' ' + s.order : '')
+		s.openButton + (side == 'right' || side == 'bottom' ? ' ' + s.order : '');
 
 	const getOutsideStyle = () => {
 		if (open) return undefined;

@@ -2,11 +2,6 @@
 @use '../../../vars' as v;
 
 .tools {
-  position: absolute;
-  top: 25px;
-
-  left: 450px;
-
   padding: 10px;
   background-color: #f8f8f8;
   border: v.$border;
@@ -18,5 +13,11 @@
 }
 
 .iconButton{
-  @include g.iconButton
+  @include g.iconButton;
+  transition: 500ms;
+}
+
+.iconUsing{
+  border-color: v.$usingClr;
+  box-shadow: 0 0 2px 2px v.$usingClr;
 }
