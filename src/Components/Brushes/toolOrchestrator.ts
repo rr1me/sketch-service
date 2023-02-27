@@ -51,6 +51,7 @@ const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasEleme
 	case 'Circle':
 		return circle({ canvas, pos, dispatch, ctx });
 	case 'Line':
+		ctx.lineWidth = params.width.v
 		return line({ canvas, pos, dispatch, ctx });
 	case 'Rectangle':
 		return rectangle({ canvas, pos, dispatch, ctx });

@@ -4,6 +4,7 @@ import React, { FC, RefObject } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, IControlState } from '../../../redux/slices/controlSlice';
 import MovingBlock from '../MovingBlock/MovingBlock';
+import { shapeSaver } from '../../Brushes/toolOrchestrator';
 
 interface IHistory {
 	canvas: RefObject<HTMLCanvasElement>
@@ -21,14 +22,8 @@ const History: FC<IHistory> = ({ canvas }) => {
 		history: { saves, index },
 	} = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
-	const draw = async (index: number) => {
-		const img = new Image();
-
-		img.src = saves[index].save;
-		await img.onload;
-		ctx.clearRect(0, 0, width, height);
-		ctx.drawImage(img, 0, 0);
-	};
+	const draw = async (index: number) =>
+		await shapeSaver(saves[index].save, ctx, canvas.current!.height, canvas.current!.width);
 
 	const redraw = async (direction: boolean) => {
 		const d = direction ? 1 : -1;
@@ -49,7 +44,7 @@ const History: FC<IHistory> = ({ canvas }) => {
 	};
 
 	return (
-		<MovingBlock name={'History'} side={'left'} outsideOffset={120} gap={20}>
+		<MovingBlock name={ic.history} side={'left'} outsideOffset={120} gap={20}>
 			<div className={s.history}>
 				<div className={s.historyCtrl}>
 					<span>History</span>

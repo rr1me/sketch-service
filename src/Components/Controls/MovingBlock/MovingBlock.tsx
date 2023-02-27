@@ -1,5 +1,5 @@
 import s from './MovingBlock.module.scss';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 type side = 'top' | 'bottom' | 'left' | 'right';
 
@@ -11,13 +11,11 @@ const MovingBlock = ({
 	side,
 	outsideOffset,
 	gap,
-}: { children: React.ReactNode, name: string, side: side, outsideOffset: number, gap: number }) => {
+}: { children: React.ReactNode, name: ReactElement, side: side, outsideOffset: number, gap: number }) => {
 	const [open, setOpen] = useState(false);
 	const [pointerEvents, setPointerEvents] = useState<object | null>(PE);
 	const openHandler = () => {
 		setOpen(v => {
-			// const value = !v;
-
 			if (!v) {
 				setTimeout(() => {
 					setPointerEvents(null);
@@ -30,13 +28,8 @@ const MovingBlock = ({
 		});
 	};
 
-	useLayoutEffect(() => {
-		// d
-
-	}, []);
-
-	const convertName = () =>
-		name.split('').map((v, i) => <React.Fragment key={i}>{v}<br /></React.Fragment>);
+	// const convertName = () =>
+	// 	name.split('').map((v, i) => <React.Fragment key={i}>{v}<br /></React.Fragment>);
 
 	const getSideStyle = () => {
 		let style = ' ';
@@ -88,12 +81,12 @@ const MovingBlock = ({
 		}
 	};
 
-	const getName = () => side == 'left' || side == 'right' ? convertName() : name;
+	// const getName = () => side == 'left' || side == 'right' ? convertName() : name;
 
 	return (
 		<div className={s.wrapper + getSideStyle()}>
 			<button className={getButtonStyle()}
-					onClick={openHandler}>{getName()}</button>
+					onClick={openHandler}>{name}</button>
 			<div className={s.block} style={{ ...getOutsideStyle(), ...getGap(), ...pointerEvents }}>
 				{children}
 			</div>

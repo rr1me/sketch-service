@@ -7,6 +7,7 @@ import MovingBlock from '../MovingBlock/MovingBlock';
 import { actions as brushActions } from '../../../redux/slices/baseBrushSlice';
 import BaseBrushSettings from '../../BrushSettings/BaseBrushSettings';
 import RangeSlider from '../../RangeSlider/RangeSlider';
+import ic from '../../Icons/Icons';
 
 const { setColor, setOpacity } = ctrlActions;
 const { setParam: setBrushParam } = brushActions;
@@ -38,7 +39,7 @@ const Settings: FC = () => {
 	}
 
 	return (
-		<MovingBlock name={'Settings'} side={'right'} outsideOffset={120} gap={20}>
+		<MovingBlock name={ic.settings} side={'right'} outsideOffset={120} gap={20}>
 			<div className={s.settings}>
 				<HexColorPicker color={color} onChange={setColorHandler} />
 				<RangeSlider name={'Opacity'} initialValue={opacity} start={0}

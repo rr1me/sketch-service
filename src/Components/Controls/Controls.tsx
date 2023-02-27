@@ -9,18 +9,9 @@ export interface IControls {
 }
 
 const Controls: FC<IControls> = ({ canvas }) => {
-
-	// const {MovingBlock, openHandler} = useMovingBlock()
-
 	return (
 		<div className={s.controls}>
 			<Tools />
-
-			{/* <button className={s.historyOpener} onClick={openHandler('history', true)} */}
-			{/* 		style={(history ? {transition: 'opacity 0.5s',opacity: 0} : {transition: 'opacity 0.5s'})} */}
-			{/* > */}
-			{/* 	{ic.rightArrow} */}
-			{/* </button> */}
 			<Settings />
 			<History canvas={canvas}/>
 		</div>

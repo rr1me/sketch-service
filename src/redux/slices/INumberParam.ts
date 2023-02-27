@@ -1,13 +1,5 @@
-// export interface IParam<T extends number | boolean> {
-// 	v: T,
-//
-// }
-
-// export interface IBaseBrushSlice {
-// 	width: INumberParam
-// }
-
 import { IBaseBrushSlice } from './baseBrushSlice';
+import { ILineSlice } from './lineSlice';
 
 export interface INumberParam {
 	v: number,
@@ -15,4 +7,4 @@ export interface INumberParam {
 	end: number
 }
 
-export type IParamObject = IBaseBrushSlice
+export type IParamObject = IBaseBrushSlice | ILineSlice

@@ -3,12 +3,6 @@ import React, { RefObject, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IControlState } from '../../redux/slices/controlSlice';
 import toolOrchestrator from '../Brushes/toolOrchestrator';
-import baseBrush from '../Brushes/baseBrush';
-import square from '../Brushes/square';
-import circle from '../Brushes/circle';
-import line from '../Brushes/line';
-import rectangle from '../Brushes/rectangle';
-import fill from '../Brushes/fill';
 
 interface IUseControlledCanvas {
 	canvas: RefObject<HTMLCanvasElement>,
@@ -30,7 +24,7 @@ const res = [
 const useControlledCanvas = (): IUseControlledCanvas => {
 	const dispatch = useDispatch();
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
-	const params = useSelector((state: any) => {
+	const params = useSelector((state: any) => { // am I really want to assign type for this callback? x_x
 		const type = tool.type;
 		switch (type) {
 		case 'Brush':

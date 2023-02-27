@@ -1,29 +1,12 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 
-
 export type brushType = 'Brush' | 'Square' | 'Circle' | 'Line' | 'Rectangle' | 'Fill'
-
-export interface IBrush {
-	width: number,
-	opacity: number
-}
-
-// interface ISquare {
-// 	opacity: number,
-// }
-
-export type paramsType = IBrush;
 
 export interface IToolParam {
 	type: brushType,
 	color: string,
 	opacity: number
 }
-
-// interface IParam<T extends number | boolean> {
-// 	value: T;
-// 	range?: T extends number ? { start: number; end: number } : never;
-// }
 
 export interface IControlState {
 	history: {
@@ -43,7 +26,7 @@ const controlSlice = createSlice({
 		tool: {
 			type: 'Brush',
 			color: '#000000',
-			opacity: 1
+			opacity: 1,
 		},
 	} as IControlState,
 	reducers: {
@@ -68,19 +51,12 @@ const controlSlice = createSlice({
 		tool: ({ tool }, { payload }) => {
 			tool.type = payload;
 		},
-		// param: ({ tool }, { payload }: { payload: [keyof IToolParam, any] }) => {
-		// 	tool[payload[0]] = payload[1];
-		// },
 		setColor: ({ tool }, { payload }: { payload: string }) => {
 			tool.color = payload;
 		},
-		setOpacity: ({tool}, {payload} : {payload: number}) => {
+		setOpacity: ({ tool }, { payload }: { payload: number }) => {
 			tool.opacity = payload;
-		}
-		// toolParam: ({ tool: { params } }, { payload }: { payload: { param: keyof paramsType, value: any } }) => {
-		// 	const { param, value } = payload;
-		// 	params[param] = value;
-		// },
+		},
 	},
 });
 
