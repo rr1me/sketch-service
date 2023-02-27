@@ -1,0 +1,17 @@
+@use '../../vars' as v;
+
+.control{
+  background-color: white;
+  border: v.$border;
+  border-radius: v.$br;
+
+  //padding: 5px 8px;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+
+.label{
+  padding: 5px 8px;
+  //font-weight: 400;
+}

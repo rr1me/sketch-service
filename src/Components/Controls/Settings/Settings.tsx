@@ -8,6 +8,7 @@ import { actions as brushActions } from '../../../redux/slices/baseBrushSlice';
 import BaseBrushSettings from '../../BrushSettings/BaseBrushSettings';
 import RangeSlider from '../../RangeSlider/RangeSlider';
 import ic from '../../Icons/Icons';
+import LineSettings from '../../BrushSettings/LineSettings';
 
 const { setColor, setOpacity } = ctrlActions;
 const { setParam: setBrushParam } = brushActions;
@@ -27,8 +28,8 @@ const Settings: FC = () => {
 		// 	return square({ canvas, pos, dispatch, ctx });
 		// case 'Circle':
 		// 	return circle({ canvas, pos, dispatch, ctx });
-		// case 'Line':
-		// 	return line({ canvas, pos, dispatch, ctx });
+		case 'Line':
+			return <LineSettings/>;
 		// case 'Rectangle':
 		// 	return rectangle({ canvas, pos, dispatch, ctx });
 		// case 'Fill':

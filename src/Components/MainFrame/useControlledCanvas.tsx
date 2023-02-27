@@ -29,6 +29,8 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 		switch (type) {
 		case 'Brush':
 			return state.baseBrushSlice;
+		case 'Line':
+			return state.lineSlice;
 		default:
 			return state.baseBrushSlice;
 		}

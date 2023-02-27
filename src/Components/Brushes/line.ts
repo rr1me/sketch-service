@@ -6,6 +6,7 @@ const line = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	ctx.lineCap = 'round';
 	// ctx.lineJoin = 'round';
 
+
 	const startPos: IPos = {x:0, y:0};
 	let saved = canvas.toDataURL();
 
