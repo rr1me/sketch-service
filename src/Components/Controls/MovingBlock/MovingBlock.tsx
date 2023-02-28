@@ -1,7 +1,9 @@
 import s from './MovingBlock.module.scss';
 import React, { ReactElement, useState } from 'react';
 
-type side = 'top' | 'bottom' | 'left' | 'right';
+type side = 'top' |
+	'bottom' |
+	'left' | 'right';
 
 const PE = { pointerEvents: 'none' };
 
@@ -11,7 +13,11 @@ const MovingBlock = ({
 	side,
 	outsideOffset,
 	gap,
-}: { children: React.ReactNode, name: ReactElement, side: side, outsideOffset: number, gap: number }) => {
+	locationOffsetSide,
+	locationOffset
+}: { children: React.ReactNode, name: ReactElement, side: side, outsideOffset: number, gap: number,
+	locationOffsetSide: side, locationOffset: number
+}) => {
 	const [open, setOpen] = useState(false);
 	const [pointerEvents, setPointerEvents] = useState<object | null>(PE);
 	const openHandler = () => {
@@ -27,9 +33,6 @@ const MovingBlock = ({
 			return !v;
 		});
 	};
-
-	// const convertName = () =>
-	// 	name.split('').map((v, i) => <React.Fragment key={i}>{v}<br /></React.Fragment>);
 
 	const getSideStyle = () => {
 		let style = ' ';
@@ -81,10 +84,21 @@ const MovingBlock = ({
 		}
 	};
 
-	// const getName = () => side == 'left' || side == 'right' ? convertName() : name;
+	const getLocationOffset = () => {
+		switch (locationOffsetSide) {
+		case 'top':
+			return { top: locationOffset + 'vh' };
+		case 'bottom':
+			return { bottom: locationOffset + 'vh' };
+		case 'left':
+			return { left: locationOffset + 'vw' };
+		case 'right':
+			return { right: locationOffset + 'vw' };
+		}
+	}
 
 	return (
-		<div className={s.wrapper + getSideStyle()}>
+		<div className={s.wrapper + getSideStyle()} style={getLocationOffset()}>
 			<button className={getButtonStyle()}
 					onClick={openHandler}>{name}</button>
 			<div className={s.block} style={{ ...getOutsideStyle(), ...getGap(), ...pointerEvents }}>

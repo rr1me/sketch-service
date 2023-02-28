@@ -1,6 +1,17 @@
+@use '../../vars' as v;
+
 .modal{
   position: absolute;
-  padding: 5px;
-  background-color: wheat;
+  background-color: white;
+  border: v.$border;
+  border-radius: v.$br;
   margin-top: 5px;
+
+  z-index: 1;
+  //opacity: 0;
+  transition: 0.1s;
 }
+
+//.open{
+//  opacity: 1;
+//}

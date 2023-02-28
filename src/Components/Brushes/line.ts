@@ -3,7 +3,6 @@ import { IPos } from '../MainFrame/useControlledCanvas';
 import { defMouseUp, shapeSaver } from './toolOrchestrator';
 
 const line = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
-	ctx.lineCap = 'round';
 	// ctx.lineJoin = 'round';
 
 

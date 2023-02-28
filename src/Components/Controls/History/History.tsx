@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actions, IControlState } from '../../../redux/slices/controlSlice';
 import MovingBlock from '../MovingBlock/MovingBlock';
 import { shapeSaver } from '../../Brushes/toolOrchestrator';
+import SimpleBar from 'simplebar-react';
 
 interface IHistory {
 	canvas: RefObject<HTMLCanvasElement>
@@ -44,7 +45,7 @@ const History: FC<IHistory> = ({ canvas }) => {
 	};
 
 	return (
-		<MovingBlock name={ic.history} side={'left'} outsideOffset={120} gap={20}>
+		<MovingBlock name={ic.history} side={'left'} outsideOffset={120} gap={20} locationOffsetSide={'top'} locationOffset={20}>
 			<div className={s.history}>
 				<div className={s.historyCtrl}>
 					<span>History</span>
@@ -52,15 +53,19 @@ const History: FC<IHistory> = ({ canvas }) => {
 					<button className={s.iconButton} onClick={redoHandler}>{ic.arrowForward}</button>
 					<button className={s.iconButton} onClick={clearHandler}>{ic.clean}</button>
 				</div>
-				{saves.length > 0 && saves.map((v, i) => {
-					return (
-						<button key={i} onClick={historyHandler(i)}
-								className={s.historyButton + (i > index ? ' ' + s.historyButtonDark : '')}>
-							<span>{v.type}</span>
-							<span>{i}</span>
-						</button>
-					);
-				})}
+				<SimpleBar style={{maxHeight: 300}} className={s.bar} forceVisible={'y'} autoHide={false}>
+					<div className={s.historyList}>
+						{saves.length > 0 && saves.map((v, i) => {
+							return (
+								<button key={i} onClick={historyHandler(i)}
+										className={s.historyButton + (i > index ? ' ' + s.historyButtonDark : '')}>
+									<span>{v.type}</span>
+									<span>{i}</span>
+								</button>
+							);
+						})}
+					</div>
+				</SimpleBar>
 			</div>
 		</MovingBlock>
 	);

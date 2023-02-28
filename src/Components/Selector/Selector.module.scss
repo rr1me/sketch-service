@@ -11,7 +11,41 @@
   user-select: none;
 }
 
-.label{
+.inner{
   padding: 5px 8px;
+  display: flex;
+  justify-content: space-between;
   //font-weight: 400;
+}
+
+.innerEnd{
+  display: flex;
+  gap: 5px;
+}
+
+.tab{
+  width: 1px;
+  height: 100%;
+  background-color: v.$fill-clr;
+  border-radius: v.$br;
+}
+
+.arrow{
+  position: relative;
+  top: 3px;
+}
+
+.modalInner{
+  //padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.item{
+  padding: 5px 8px;
+}
+
+.item:hover{
+  background-color: v.$bord-clr
 }

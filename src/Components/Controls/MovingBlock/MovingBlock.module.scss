@@ -22,18 +22,22 @@
 }
 
 .top{
-  left: 20vw;
+  //left: 20vw;
 }
 .bottom{
+  bottom: 0;
+  //left: 20vw;
+  //display: flex;
+  //flex-direction: column;
 
 }
 .left{
   display: flex;
-  top: 20vh;
+  //top: 20vh;
 }
 .right{
   display: flex;
-  top: 20vh;
+  //top: 20vh;
   right: 0;
 }
 

@@ -9,6 +9,7 @@ import fill from './fill';
 import { IPos } from '../MainFrame/useControlledCanvas';
 import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
+import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
 
 const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch) => {
 	const ctx = canvas.getContext('2d')!;
@@ -52,6 +53,7 @@ const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasEleme
 		return circle({ canvas, pos, dispatch, ctx });
 	case 'Line':
 		ctx.lineWidth = params.width.v
+		ctx.lineCap = lineCapOptions[(params as ILineSlice).lineCap].value;
 		return line({ canvas, pos, dispatch, ctx });
 	case 'Rectangle':
 		return rectangle({ canvas, pos, dispatch, ctx });
@@ -81,5 +83,11 @@ export const shapeSaver = async (saved: string, ctx: CanvasRenderingContext2D, h
 	ctx.drawImage(img, 0, 0, width, height);
 	ctx.globalAlpha = oldGA;
 };
+
+export const lineCapOptions = [
+	{value: 'butt', label: 'Butt'},
+	{value: 'round', label: 'Round'},
+	{value: 'square', label: 'Square'}
+] as {value: tLineCap, label: string}[];
 
 export default toolOrchestrator;

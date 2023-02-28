@@ -12,3 +12,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.simplebar-track.simplebar-vertical .simplebar-scrollbar:before {
+  background-color: #a8a8a8;
+}

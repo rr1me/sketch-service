@@ -7,4 +7,4 @@ export interface INumberParam {
 	end: number
 }
 
-export type IParamObject = IBaseBrushSlice | ILineSlice
+export type IParamObject = ILineSlice | IBaseBrushSlice

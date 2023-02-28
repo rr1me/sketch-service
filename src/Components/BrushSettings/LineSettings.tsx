@@ -3,6 +3,7 @@ import { AppDispatch } from '../../redux/store';
 import RangeSlider from '../RangeSlider/RangeSlider';
 import { actions, ILineSlice } from '../../redux/slices/lineSlice';
 import Selector from '../Selector/Selector';
+import { lineCapOptions } from '../Brushes/toolOrchestrator';
 
 const {setParam} = actions;
 
@@ -12,21 +13,16 @@ const LineSettings = () => {
 
 	const toolParamHandler = (param: keyof ILineSlice) => (v: number) => dispatch(setParam({ param: param, value: v }));
 
-	const options = [
-		{value: 'v', label: 'h'},
-		{value: 'v1', label: 'h1'},
-		{value: 'v2', label: 'h2'}
-	]
-
 	const onSelectorChange = (e:number) => {
 		console.log(e);
+		dispatch(setParam({param: 'lineCap', value: e}))
 	}
 
 	return (
 		<>
 			<RangeSlider name={'Width'} initialValue={params.width.v} start={params.width.start}
 						 end={params.width.end} onChange={toolParamHandler('width')} />
-			<Selector options={options} value={2} onChange={onSelectorChange}/>
+			<Selector options={lineCapOptions.map(v=>v.label)} value={params.lineCap} onChange={onSelectorChange}/>
 		</>
 	)
 };

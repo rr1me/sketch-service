@@ -18,7 +18,7 @@ const Tools: FC = () => {
 	};
 
 	return (
-		<MovingBlock name={ic.tools} side={'top'} outsideOffset={160} gap={10}>
+		<MovingBlock name={ic.tools} side={'top'} outsideOffset={160} gap={10} locationOffsetSide={'left'} locationOffset={20}>
 			<div className={s.tools}>
 				<button className={s.iconButton + (type === 'Brush' ? ' ' + s.iconUsing : '')} onClick={selectTool('Brush')}>{ic.paintBrush}</button>
 				<button className={s.iconButton + (type === 'Square' ? ' ' + s.iconUsing : '')} onClick={selectTool('Square')}>{ic.square}</button>

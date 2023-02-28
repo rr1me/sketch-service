@@ -9,9 +9,12 @@ import BaseBrushSettings from '../../BrushSettings/BaseBrushSettings';
 import RangeSlider from '../../RangeSlider/RangeSlider';
 import ic from '../../Icons/Icons';
 import LineSettings from '../../BrushSettings/LineSettings';
+import GeometrySettings from '../../BrushSettings/GeometrySettings';
+import { actions as squareActions } from '../../../redux/slices/squareSlice';
 
 const { setColor, setOpacity } = ctrlActions;
-const { setParam: setBrushParam } = brushActions;
+const {setParam: setSquareParam} = squareActions
+// const { setParam: setBrushParam } = brushActions;
 
 const Settings: FC = () => {
 	const dispatch = useDispatch();
@@ -23,11 +26,11 @@ const Settings: FC = () => {
 	const getCorrectSettings = () => {
 		switch (type) {
 		case 'Brush':
-			return <BaseBrushSettings/>
-		// case 'Square':
-		// 	return square({ canvas, pos, dispatch, ctx });
+			return <BaseBrushSettings/>;
+		case 'Square':
+			return <GeometrySettings paramType={'squareSlice'} reducer={setSquareParam}/>;
 		// case 'Circle':
-		// 	return circle({ canvas, pos, dispatch, ctx });
+		// 	return <GeometrySettings paramType={'circleSlice'} reducer={setSquareParam}/>;
 		case 'Line':
 			return <LineSettings/>;
 		// case 'Rectangle':
@@ -35,12 +38,12 @@ const Settings: FC = () => {
 		// case 'Fill':
 		// 	return fill({ canvas, pos, dispatch, ctx });
 		default:
-			return <BaseBrushSettings/>
+			return <></>;
 		}
 	}
 
 	return (
-		<MovingBlock name={ic.settings} side={'right'} outsideOffset={120} gap={20}>
+		<MovingBlock name={ic.settings} side={'right'} outsideOffset={120} gap={20} locationOffsetSide={'top'} locationOffset={20}>
 			<div className={s.settings}>
 				<HexColorPicker color={color} onChange={setColorHandler} />
 				<RangeSlider name={'Opacity'} initialValue={opacity} start={0}

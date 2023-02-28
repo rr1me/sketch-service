@@ -2,7 +2,7 @@ import s from './Icons.module.scss';
 import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi';
 import React from 'react';
 import { FaPaintBrush, FaToolbox } from 'react-icons/fa';
-import { IoMdSquare } from 'react-icons/io';
+import { IoIosArrowDown, IoMdSquare } from 'react-icons/io';
 import { BsCircleFill, BsFillTriangleFill } from 'react-icons/bs';
 import { HiOutlineMinus } from 'react-icons/hi';
 import {
@@ -41,9 +41,13 @@ const settings = <IoSettingsSharp/>
 // const tools = <FaToolbox/>
 const tools = <GoTools/>
 
+const selectorArrow = <IoIosArrowDown/>
+
 export default { paintBrush, square, circle, line, triangle, fill,
 	arrowBack, arrowForward, clean,
 	leftArrow, rightArrow,
 
-	history, settings, tools
+	history, settings, tools,
+
+	selectorArrow
 };
