@@ -1,38 +1,42 @@
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ExpressPeerServer } from 'peer';
+import * as process from 'process';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
-async function bootstrap() {
+(async () => {
   const app = await NestFactory.create(AppModule);
   const port = process.env.PORT || 3001;
+  const peerServer = ExpressPeerServer(app.getHttpServer());
+  // console.log(peerServer + "?!");
 
-  const server = app.getHttpServer();
-  const ioAdapter = new IoAdapter(server);
+  const adapter = new IoAdapter(app.getHttpServer());
+  app.useWebSocketAdapter(adapter);
 
-  app.useWebSocketAdapter(ioAdapter);
-
-  const httpCorsOptions: CorsOptions = {
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  };
-  app.enableCors(httpCorsOptions);
-
-  // ioAdapter.set('origins', '*:*');
-  // const ioCorsOptions: CorsOptions = {
+  // const httpCorsOptions: CorsOptions = {
   //   origin: '*',
   //   methods: ['GET', 'POST'],
   //   allowedHeaders: ['Content-Type', 'Authorization'],
   // };
+  // app.enableCors(httpCorsOptions);
 
-  // ioAdapter.use((socket, next) => {
-  //   ioCorsOptions.origin = socket.handshake.headers.origin;
-  //   next();
+
+  // peerServer.on('message', (client, message) => {
+  //   console.log(`${client.getId()} says: `);
+  //   console.log(message);
+  // })
+  // peerServer.on('connection', (client) => {
+  //   console.log('connect id: ' + client.getId());
+  // });
+  // peerServer.on('disconnect', (client) => {
+  //   console.log('disconnect id: ' + client.getId());
   // });
 
-  await app.listen(port);
-  console.log(`Server running on http://localhost:${port}`);
-}
+  app.enableShutdownHooks();
 
-bootstrap();
+
+  app.use('/peerjs', peerServer);
+
+  await app.listen(port);
+})();
