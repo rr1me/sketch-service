@@ -10,11 +10,9 @@ import { IPos } from '../MainFrame/useControlledCanvas';
 import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
-import { Socket } from 'socket.io-client';
-import Peer, { DataConnection } from 'peerjs';
 import { connType } from '../../App';
 
-const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, connection: connType, socket: Socket) => {
+const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, connection: connType) => {
 	const ctx = canvas.getContext('2d')!;
 
 	ctx.strokeStyle = tool.color;
@@ -36,8 +34,7 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		previous = {x: pos.x, y: pos.y};
 
 		// mouseDown(e);
-		socket.emit('message', { type: 'start', x: e.clientX, y: e.clientY });
-		// connection.conn?.send({ type: 'start', x: e.clientX, y: e.clientY });
+		connection.conn?.send({ type: 'start', x: e.clientX, y: e.clientY });
 	};
 	const outMouseMove = async (e: MouseEvent) => {
 
@@ -61,7 +58,7 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		lastPoint = { x: e.offsetX, y: e.offsetY };
 		// ctx.closePath();
 
-		// connection.conn?.send({ type: 'move', x: e.clientX, y: e.clientY });
+		connection.conn?.send({ type: 'move', x: e.clientX, y: e.clientY });
 
 
 		// updCoords(e, pos, canvas);
@@ -71,7 +68,6 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		// previous = {x: pos.x, y: pos.y};
 		//
 		// mouseMove(e);
-		socket.emit('message', { type: 'move', x: e.clientX, y: e.clientY });
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;
@@ -81,8 +77,7 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		ctx.closePath();
 
 		// mouseUp(e);
-		socket.emit('message', { type: 'end', x: e.clientX, y: e.clientY });
-		// connection.conn?.send({ type: 'end', x: e.clientX, y: e.clientY });
+		connection.conn?.send({ type: 'end', x: e.clientX, y: e.clientY });
 	};
 
 	return [outMouseDown, outMouseMove, outMouseUp];
