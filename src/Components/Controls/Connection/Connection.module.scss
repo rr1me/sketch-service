@@ -1,0 +1,33 @@
+@use '../ControlsGlobal.module' as g;
+@use '../../../vars' as v;
+
+.connection{
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: v.$border;
+
+  //display: flex;
+  //flex-direction: column;
+  //gap: 5px;
+
+  border-radius: v.$br;
+}
+
+.ctrl{
+  margin-bottom: 5px;
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+}
+
+button{
+  padding: 2px 5px;
+}
+
+.input{
+  background-color: white;
+  border-radius: v.$br;
+  border: v.$border;
+  //color: white;
+  //background-color: black;
+}

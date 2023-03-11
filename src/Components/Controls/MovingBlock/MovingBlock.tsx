@@ -95,7 +95,7 @@ const MovingBlock = ({
 		case 'right':
 			return { right: locationOffset + 'vw' };
 		}
-	}
+	};
 
 	return (
 		<div className={s.wrapper + getSideStyle()} style={getLocationOffset()}>

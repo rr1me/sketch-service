@@ -13,7 +13,7 @@ import {
 	RiSettings3Fill,
 } from 'react-icons/ri';
 import { GiVacuumCleaner } from 'react-icons/gi';
-import { MdOutlineHistoryEdu, MdSettings } from 'react-icons/md';
+import { MdCastConnected, MdOutlineHistoryEdu, MdSettings } from 'react-icons/md';
 import { FcSettings } from 'react-icons/fc';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GoTools } from 'react-icons/go';
@@ -43,11 +43,15 @@ const tools = <GoTools/>
 
 const selectorArrow = <IoIosArrowDown/>
 
+const connection = <MdCastConnected/>
+
 export default { paintBrush, square, circle, line, triangle, fill,
 	arrowBack, arrowForward, clean,
 	leftArrow, rightArrow,
 
 	history, settings, tools,
 
-	selectorArrow
+	selectorArrow,
+
+	connection
 };

@@ -4,13 +4,19 @@ import useControlledCanvas from './Components/MainFrame/useControlledCanvas';
 import Controls from './Components/Controls/Controls';
 
 import 'simplebar-react/dist/simplebar.min.css';
+import Peer, { DataConnection } from 'peerjs';
+
+export type connType = {peer: Peer | null, conn: DataConnection | null};
+
+const connection: connType = {peer: null, conn: null};
 
 function App() {
-	const { canvas, controlledCanvas } = useControlledCanvas();
+	console.log(connection);
+	const { canvas, controlledCanvas } = useControlledCanvas(connection);
 
 	return (
 		<div className={s.app}>
-			<Controls canvas={canvas} />
+			<Controls canvas={canvas} connection={connection}/>
 			{controlledCanvas}
 		</div>
 	);
