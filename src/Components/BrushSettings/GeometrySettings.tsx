@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
-import { lineCapOptions } from '../Brushes/toolOrchestrator';
-import Selector from '../Selector/Selector';
 
 const GeometrySettings = ({ paramType, reducer }: { paramType: any, reducer: any }) => { // todo future stroke param
 	const dispatch = useDispatch<AppDispatch>();

@@ -11,7 +11,6 @@ export type connType = {peer: Peer | null, conn: DataConnection | null};
 const connection: connType = {peer: null, conn: null};
 
 function App() {
-	console.log(connection);
 	const { canvas, controlledCanvas } = useControlledCanvas(connection);
 
 	return (

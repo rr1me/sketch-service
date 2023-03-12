@@ -11,6 +11,7 @@ import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
 import { connType } from '../../App';
+import { IBaseBrushSlice } from '../../redux/slices/baseBrushSlice';
 
 const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, connection: connType) => {
 	const ctx = canvas.getContext('2d')!;
@@ -20,64 +21,32 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 
 	let pressed = false;
 
-	let previous: {x: number, y: number};
-
-	let lastPoint: {x: number, y:number} | undefined;
-
 	const [mouseDown, mouseMove, mouseUp] = getTool(tool, params, canvas, pos, dispatch, ctx);
 
 	const outMouseDown = (e: MouseEvent) => {
 		updCoords(e, pos, canvas);
 		pressed = true;
-		console.log(connection);
+		mouseDown(e);
 
-		previous = {x: pos.x, y: pos.y};
-
-		// mouseDown(e);
-		connection.conn?.send({ type: 'start', x: e.clientX, y: e.clientY });
+		if (tool.type == 'Brush')
+			connection.conn?.send({ condition: 'start', x: pos.x, y: pos.y, params: {width: params.width.v, opacity: tool.opacity, color: tool.color} });
 	};
 	const outMouseMove = async (e: MouseEvent) => {
-
-
-
-
-
 		if (e.buttons !== 1 || !pressed) return;
 
-		if (!lastPoint) {
-			lastPoint = { x: e.offsetX, y: e.offsetY };
-			return;
-		}
-		ctx.beginPath();
-		ctx.moveTo(lastPoint.x, lastPoint.y);
-		ctx.lineTo(e.offsetX, e.offsetY);
-		ctx.strokeStyle = 'green';
-		// ctx.lineWidth = Math.pow(currentForce, 4) * 2;
-		ctx.lineCap = 'round';
-		ctx.stroke();
-		lastPoint = { x: e.offsetX, y: e.offsetY };
-		// ctx.closePath();
+		updCoords(e, pos, canvas);
+		mouseMove(e);
 
-		connection.conn?.send({ type: 'move', x: e.clientX, y: e.clientY });
-
-
-		// updCoords(e, pos, canvas);
-		//
-		// const distance = Math.sqrt(Math.pow(pos.x - previous.x, 2) + Math.pow(pos.y - previous.y, 2));
-		// if (distance < 5) return;
-		// previous = {x: pos.x, y: pos.y};
-		//
-		// mouseMove(e);
+		if (tool.type == 'Brush')
+			connection.conn?.send({ condition: 'move', x: pos.x, y: pos.y });
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;
 		pressed = false;
+		mouseUp(e);
 
-		lastPoint = undefined;
-		ctx.closePath();
 
-		// mouseUp(e);
-		connection.conn?.send({ type: 'end', x: e.clientX, y: e.clientY });
+		connection.conn?.send({ condition: 'end', x: pos.x, y: pos.y });
 	};
 
 	return [outMouseDown, outMouseMove, outMouseUp];
