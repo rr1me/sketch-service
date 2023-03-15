@@ -7,21 +7,26 @@ const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	let saved = canvas.toDataURL();
 
 	const mouseDown = () => {
-		ctx.beginPath();
-		ctx.moveTo(pos.x, pos.y);
+		// ctx.beginPath();
+		// ctx.moveTo(pos.x, pos.y);
 
 		saved = canvas.toDataURL();
 	};
 
 	const mouseUp = () => {
-		defMouseUp('Brush', ctx, dispatch, canvas);
+		// defMouseUp('Brush', ctx, dispatch, canvas);
 	}
 
 	const mouseMove = async () => {
-		ctx.lineTo(pos.x, pos.y);
+		// ctx.lineTo(pos.x, pos.y);
 
-		await shapeSaver(saved, ctx, canvas.height, canvas.width)
-		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.arc(pos.x, pos.y, 5, 0, 2 * Math.PI);
+		ctx.closePath();
+
+		// await shapeSaver(saved, ctx, canvas.height, canvas.width)
+		// ctx.stroke();
 	};
 
 	return [mouseDown, mouseMove, mouseUp];

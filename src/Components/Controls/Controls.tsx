@@ -4,7 +4,6 @@ import History from './History/History';
 import Tools from './Tools/Tools';
 import Settings from './Settings/Settings';
 import Connection from './Connection/Connection';
-import Peer, { DataConnection } from 'peerjs';
 import { connType } from '../../App';
 
 export interface IControls {
@@ -13,7 +12,6 @@ export interface IControls {
 }
 
 const Controls: FC<IControls> = ({ canvas, connection }) => {
-	console.log(connection);
 	return (
 		<div className={s.controls}>
 			<Tools />

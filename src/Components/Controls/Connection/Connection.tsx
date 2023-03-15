@@ -2,14 +2,11 @@ import s from './Connection.module.scss';
 import MovingBlock from '../MovingBlock/MovingBlock';
 import ic from '../../Icons/Icons';
 import React, { FC, RefObject, useEffect, useRef, useState } from 'react';
-import Peer, { DataConnection } from 'peerjs';
+import Peer from 'peerjs';
 import { connType } from '../../../App';
 import { shapeSaver } from '../../Brushes/toolOrchestrator';
 import { useSelector } from 'react-redux';
 import { IControlState } from '../../../redux/slices/controlSlice';
-
-// let connection.peer: Peer;
-// let conn: DataConnection;
 
 interface IConn {
 	canvas: RefObject<HTMLCanvasElement>;
@@ -17,8 +14,6 @@ interface IConn {
 }
 
 const Connection: FC<IConn> = ({ canvas, connection }) => {
-	// console.log(connection);
-
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 	const params = useSelector((state: any) => { // am I really want to assign type for this callback? x_x
 		const type = tool.type;
@@ -37,23 +32,14 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 	const inputpeer = useRef<HTMLInputElement>(null);
 	const [id, setId] = useState<string>('');
 
-	const dataEvent = (ctx: CanvasRenderingContext2D) => (data: any) => {
+	const dataEvent = (ctx: CanvasRenderingContext2D) => async (data: any) => {
 		if (typeof data == 'string'){
-			shapeSaver(data, ctx, canvas.current!.height, canvas.current!.width)
+			await shapeSaver(data, ctx, canvas.current!.height, canvas.current!.width)
 			return;
 		}
 
-		networkDraw(data, ctx, restore);
+		await networkDraw(data, ctx, canvas.current!, restore);
 	}
-
-	const openEvent = () => {
-		const save = canvas.current?.toDataURL();
-		connection.conn?.send(save);
-	}
-
-	// type IRole = 'master' | 'slave'
-	//
-	// let role: IRole = 'master';
 
 	const f = useRef(false);
 	useEffect(() => {
@@ -70,17 +56,8 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 
 		const dv = dataEvent(ctx)
 		connection.conn?.off('data')
-		// connection.conn?.off('open', openEvent)
 
 		connection.conn?.on('data', dv)
-
-		// if (role == 'master'){
-		// 	connection.conn?.on('open', openEvent)
-		// }else{
-		// 	connection.conn?.on('open', () => {
-		// 		console.log('?');
-		// 	})
-		// }
 	}
 
 	const restore = () => {
@@ -102,23 +79,16 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 		connection.peer.on('open', (data: any) => {
 			console.log(data);
 			setId(data);
-		}); // signal tunnel open: server-client
+		});
 
 		connection.peer.on('connection', (data: any) => {
 			connection.conn = data;
-			console.log(data);
-
 			regEvents();
-			// const ctx = canvas.current!.getContext('2d')!;
-
-			// data.on('data', (data: any) => {
-			// 	networkDraw(data, ctx, restore);
-			// }); // getting data from slave
 			data.on('open', () => {
 				const save = canvas.current?.toDataURL();
 				data.send(save);
-			}); // sending data to slave
-		}); // slave connected to master: client-client slave-master
+			});
+		});
 		console.log('make');
 	};
 
@@ -130,27 +100,13 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 
 		regEvents()
 
-		// const ctx = canvas.current!.getContext('2d')!;
-		// connection.conn.on('data', (data: any) => {
-		// 	if (typeof data == 'string'){
-		// 		shapeSaver(data, ctx, canvas.current!.height, canvas.current!.width)
-		// 		return;
-		// 	}
-		//
-		// 	networkDraw(data, ctx, restore);
-		// }); // slave getting data from master
-
 		connection.conn.on('open', () => {
-			// connection.conn?.send('hi!');
-		}); // you as slave connected to master: client-client slave-master.
+			console.log('conn');
+		});
 	};
 
 	const sendHandle = () => {
 		console.log(tool.color, params.width);
-		// const dv = dataEvent(ctx)
-		connection.conn?.off('data')
-		// if (!connection.conn) return;
-		// connection.conn.send(inputpeer.current!.value);
 	};
 
 	return (
@@ -169,8 +125,14 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 	);
 };
 
-const networkDraw = (data: any, ctx: CanvasRenderingContext2D, restore: () => void) => {
+let saved: any;
+
+let dataArray: any[];
+
+const networkDraw = async (data: any, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, restore: () => void) => {
 	const { condition, x, y, params } = data;
+
+	dataArray.push(data);
 
 	switch (condition) {
 	case 'start':
@@ -181,18 +143,21 @@ const networkDraw = (data: any, ctx: CanvasRenderingContext2D, restore: () => vo
 
 		ctx.beginPath();
 		ctx.moveTo(x, y);
+
+		saved = canvas.toDataURL();
 		break;
 	case 'move':
 		ctx.lineTo(x, y);
-		// 			// await shapeSaver(saved, ctx, canvas.height, canvas.width)
+		await shapeSaver(saved, ctx, canvas.height, canvas.width)
 		ctx.stroke();
 		break;
 	case 'end':
 		ctx.closePath();
 
-		restore()
-	}
+		restore();
 
+
+	}
 }
 
 export default Connection;

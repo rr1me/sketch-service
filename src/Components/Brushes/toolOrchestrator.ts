@@ -11,7 +11,6 @@ import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
 import { connType } from '../../App';
-import { IBaseBrushSlice } from '../../redux/slices/baseBrushSlice';
 
 const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, connection: connType) => {
 	const ctx = canvas.getContext('2d')!;
@@ -44,7 +43,6 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		if (!pressed) return;
 		pressed = false;
 		mouseUp(e);
-
 
 		connection.conn?.send({ condition: 'end', x: pos.x, y: pos.y });
 	};
