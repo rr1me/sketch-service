@@ -22,5 +22,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /.idea
+/.yarn
+/.pnp.cjs
+/.pnp.loader.mjs
+/yarn.lock
 
 /wba.txt

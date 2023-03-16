@@ -25,7 +25,7 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 		case 'Line':
 			return state.lineSlice;
 		default:
-			return state.baseBrushSlice;
+			return state.baseBrushSlice; 
 		}
 	});
 

@@ -36,6 +36,7 @@ const History: FC<IHistory> = ({ canvas }) => {
 	const redoHandler = () => saves.length - 1 > index && redraw(false);
 	const clearHandler = () => {
 		dispatch(clear());
+		console.log(canvas, ctx);
 		ctx.clearRect(0, 0, width, height);
 	};
 
