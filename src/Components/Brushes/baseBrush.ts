@@ -118,32 +118,35 @@ const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 		if (d < 5) return;
 
 
+		let x;
+		let y;
+
+
 		if (between > 0){
 			let px = prev.x;
 			let py = prev.y;
 
 			for (let i = 0; i < between; i++){
-				const x = calcX(px, pos.x, py, pos.y);
-				const y = calcY(px, pos.x, py, pos.y);
+				x = calcX(px, pos.x, py, pos.y);
+				y = calcY(px, pos.x, py, pos.y);
 
-				// ctx.fillStyle = '#ff0000';
 
 				drawDot(x, y);
-				// ctx.fillStyle = '#000000';
-				// console.log('?');
 
 				px = x;
 				py = y;
 			}
 		}else{
-			drawDot(pos.x, pos.y);
+			x = calcX(prev.x, pos.x, prev.y, pos.y);
+			y = calcY(prev.x, pos.x, prev.y, pos.y);
+			drawDot(x, y);
 		}
 
 
 
 
 
-		prev = { x: pos.x, y: pos.y };
+		prev = { x: x, y: y };
 	};
 
 	return [mouseDown, mouseMove, mouseUp];
