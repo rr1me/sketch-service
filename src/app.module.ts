@@ -1,22 +1,16 @@
-import { Inject, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { ChatGateway } from './chat/chat.gateway';
-import { HttpAdapterHost } from '@nestjs/core';
-import { PeerServerMiddleware } from './peer.middleware';
+import { Module } from '@nestjs/common';
+import { SocketIoGateway } from './socketio.gateway';
+import { PeerjsGateway } from './peerjs.gateway';
+import { RoomsService } from './rooms.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [
-      ChatGateway,
-      PeerServerMiddleware
-  ],
+	imports: [],
+	controllers: [],
+	providers: [
+		RoomsService,
+		SocketIoGateway,
+		PeerjsGateway
+	],
 })
-export class AppModule{
-
-    // configure(consumer: MiddlewareConsumer) {
-    //     consumer
-    //         .apply(PeerServerMiddleware)
-    //         .forRoutes('/peerjs');
-    // }
+export class AppModule {
 }
