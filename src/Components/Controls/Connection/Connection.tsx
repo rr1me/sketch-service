@@ -7,11 +7,36 @@ import { connType } from '../../../App';
 import { shapeSaver } from '../../Brushes/toolOrchestrator';
 import { useSelector } from 'react-redux';
 import { IControlState } from '../../../redux/slices/controlSlice';
+import { bbMove, drawDot, getDist } from '../../Brushes/baseBrush';
+import { io, Socket } from 'socket.io-client';
+import Sections from './Sections/Sections';
 
 interface IConn {
 	canvas: RefObject<HTMLCanvasElement>;
 	connection: connType;
 }
+
+type RoomRole = 'Host' | 'User'
+
+type IUser = {
+	name: string;
+	socketId: string;
+	peerId: string;
+	roomRole: RoomRole;
+}
+
+type IRoom = {
+	name: string;
+	// hostSocketId: string;
+	// hostPeerId: string;
+	slots: number;
+	isPrivate: boolean;
+	password: string;
+
+	users: IUser[]
+}
+
+let socket: Socket;
 
 const Connection: FC<IConn> = ({ canvas, connection }) => {
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
@@ -25,55 +50,70 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 		case 'Line':
 			return state.lineSlice;
 		default:
-			return state.baseBrushSlice; 
+			return state.baseBrushSlice;
 		}
 	});
 
-	const inputpeer = useRef<HTMLInputElement>(null);
-	const [id, setId] = useState<string>('');
+	const [subscribed, setSubscribed] = useState(false);
+	const [rooms, setRooms] = useState<IRoom[]>([]);
 
-	const dataEvent = (ctx: CanvasRenderingContext2D) => async (data: any) => {
-		if (typeof data == 'string'){
-			await shapeSaver(data, ctx, canvas.current!.height, canvas.current!.width)
-			return;
-		}
+	useEffect(() => {
+		socket = io('http://localhost:3001/gateway');
 
-		await networkDraw(data, ctx, canvas.current!, restore);
-	}
+		socket.on('message', (socket: any) => {
+			console.log(socket);
+		});
+
+		socket.on('rooms', (data: any) => {
+			console.log(data);
+			setRooms(data);
+		});
+
+		return () => {
+			socket.disconnect();
+		};
+	}, []);
 
 	const f = useRef(false);
 	useEffect(() => {
-		if (!f.current && connection.conn == null){
+		if (!f.current && connection.conn == null) {
 			f.current = true;
 			return;
 		}
 
-		regEvents()
-	}, [tool, params])
+		regEvents();
+	}, [tool, params]);
+
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [id, setId] = useState<string>('');
 
 	const regEvents = () => {
 		const ctx = canvas.current!.getContext('2d')!;
 
-		const dv = dataEvent(ctx)
-		connection.conn?.off('data')
+		const restore = () => {
+			const ctx = canvas.current!.getContext('2d')!;
+			ctx.strokeStyle = tool.color;
+			ctx.fillStyle = tool.color;
+			ctx.globalAlpha = tool.opacity;
+		};
 
-		connection.conn?.on('data', dv)
-	}
+		const dataEvent = async (data: any) => {
+			if (typeof data == 'string') {
+				await shapeSaver(data, ctx, canvas.current!.height, canvas.current!.width);
+				return;
+			}
 
-	const restore = () => {
-		const ctx = canvas.current!.getContext('2d')!;
-		console.log(tool.color, params.width);
-		ctx.strokeStyle = tool.color;
-		ctx.fillStyle = tool.color;
-		ctx.lineWidth = params.width.v;
-		ctx.globalAlpha = tool.opacity;
+			await networkDraw(data, ctx, canvas.current!, restore);
+		};
+
+		connection.conn?.forEach(v => v.off('data'));
+		connection.conn?.forEach(v => v.on('data', dataEvent));
 	};
 
-	const makeHandle = () => {
+	const makePeer = () => {
 		connection.peer = new Peer({
 			host: 'localhost',
-			port: 3001,
-			path: '/peerjs',
+			port: 3002,
 		});
 
 		connection.peer.on('open', (data: any) => {
@@ -82,82 +122,137 @@ const Connection: FC<IConn> = ({ canvas, connection }) => {
 		});
 
 		connection.peer.on('connection', (data: any) => {
-			connection.conn = data;
+			connection.conn?.push(data);
 			regEvents();
 			data.on('open', () => {
 				const save = canvas.current?.toDataURL();
 				data.send(save);
 			});
 		});
-		console.log('make');
+		console.log(connection.peer.id);
 	};
 
-	const connHandle = () => {
+	const connectToPeer = () => {
 		if (!connection.peer) return;
-		const value = inputpeer.current!.value;
+		const value = inputRef.current!.value;
 
-		connection.conn = connection.peer.connect(value); // slave connecting to master
+		const items = connection.peer.connect(value);
+		console.log(items);
+		connection.conn?.push(items);
 
-		regEvents()
+		regEvents();
+	};
 
-		connection.conn.on('open', () => {
-			console.log('conn');
+	const makeRoom = () => {
+		if (!connection.peer)
+			makePeer();
+
+		console.log(connection.peer);
+
+		socket.emit('makeRoom', {
+			hostPeerId: connection.peer?.id,
+			slots: 5,
+			isPrivate: false,
 		});
 	};
 
-	const sendHandle = () => {
-		console.log(tool.color, params.width);
+	// const regEvent = () => {
+	// 	socket.on('rooms', (data: any) => {
+	// 		console.log(data);
+	// 		setRooms(data);
+	// 	})
+	// }
+	const openEvent = () => {
+		socket.emit('subscribe');
+		socket.on('rooms', (data: any) => {
+			console.log(data);
+			setRooms(data);
+		});
+
+		// if (!subscribed) setSubscribed(true);
+		console.log(rooms);
 	};
+
+	const [section, setSection] = useState(0);
+	const ctrlButtons = [
+		ic.list,
+		ic.plus,
+		ic.connect,
+		ic.filter,
+	];
+	const ctrlButtonHandler = (section: number) => () => setSection(section);
 
 	return (
 		<MovingBlock name={ic.connection} side={'top'} outsideOffset={250} gap={10} locationOffsetSide={'right'}
-					 locationOffset={0}>
+					 locationOffset={10} openEvent={openEvent}>
 			<div className={s.connection}>
 				<div className={s.ctrl}>
-					<button onClick={makeHandle}>make</button>
-					<button onClick={connHandle}>conn</button>
-					<button onClick={sendHandle}>send</button>
+					{ctrlButtons.map((v, i) =>
+						<button key={i} onClick={ctrlButtonHandler(i)}
+								className={s.ctrlButton + (i === section ? ' ' + s.iconUsing : '')}>{v}</button>,
+					)}
 				</div>
-				<input className={s.input} ref={inputpeer} />
-				<div>id: {id}</div>
+
+				<Sections section={section} rooms={rooms}/>
+
+				{/* <div className={s.connList}> */}
+				{/* 	{rooms.map((v)=> */}
+				{/* 		<div key={v.users[0].socketId} className={s.room}> */}
+				{/* 			<span>{v.name}</span> */}
+				{/* 			<div className={s.listEnd}> */}
+				{/* 				{v.isPrivate ? <span>{ic.locker}</span> : null} */}
+				{/* 				<span>{v.users.length}/{v.slots}</span> */}
+				{/* 			</div> */}
+				{/* 		</div> */}
+				{/* 	)} */}
+				{/* </div> */}
+
+
+				{/* <span>{section}</span> */}
+
+				{/* <div className={s.ctrl}> */}
+				{/* <button onClick={makePeer}>make</button> */}
+				{/* <button onClick={connectToPeer}>conn</button> */}
+				{/* <button onClick={makeRoom}>makeRoom</button> */}
+				{/* <button onClick={regEvent}>reg</button> */}
+				{/* </div> */}
+				{/* <input className={s.input} ref={inputRef} /> */}
+				{/* <div>id: {id}</div> */}
+				{/* <div>{rooms.map((v:any, i)=>{ */}
+				{/* 	return ( */}
+				{/* 		<div key={i}>{v.hostSocketId}</div> */}
+				{/* 	) */}
+				{/* })}</div> */}
 			</div>
 		</MovingBlock>
 	);
+
 };
 
-let saved: any;
-
-let dataArray: any[];
+let radius = 0;
+let dist = 0;
+let prev: { x: number, y: number } = { x: 0, y: 0 };
 
 const networkDraw = async (data: any, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, restore: () => void) => {
 	const { condition, x, y, params } = data;
-
-	dataArray.push(data);
 
 	switch (condition) {
 	case 'start':
 		ctx.strokeStyle = params.color;
 		ctx.fillStyle = params.color;
-		ctx.lineWidth = params.width;
+		radius = params.width;
+		dist = getDist(radius);
 		ctx.globalAlpha = params.opacity;
 
-		ctx.beginPath();
-		ctx.moveTo(x, y);
-
-		saved = canvas.toDataURL();
+		drawDot(ctx, x, y, radius);
+		prev = { x: x, y: y };
 		break;
 	case 'move':
-		ctx.lineTo(x, y);
-		await shapeSaver(saved, ctx, canvas.height, canvas.width)
-		ctx.stroke();
+		bbMove(prev, { x, y }, ctx, radius, dist);
 		break;
 	case 'end':
-		ctx.closePath();
-
 		restore();
-
-
 	}
-}
+};
 
 export default Connection;

@@ -6,9 +6,9 @@ import Controls from './Components/Controls/Controls';
 import 'simplebar-react/dist/simplebar.min.css';
 import Peer, { DataConnection } from 'peerjs';
 
-export type connType = {peer: Peer | null, conn: DataConnection | null};
+export type connType = {peer: Peer | null, conn: DataConnection[]};
 
-const connection: connType = {peer: null, conn: null};
+const connection: connType = {peer: null, conn: []};
 
 function App() {
 	const { canvas, controlledCanvas } = useControlledCanvas(connection);

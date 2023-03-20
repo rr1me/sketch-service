@@ -26,9 +26,10 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		updCoords(e, pos, canvas);
 		pressed = true;
 		mouseDown(e);
+		console.log(connection.conn);
 
 		if (tool.type == 'Brush')
-			connection.conn?.send({ condition: 'start', x: pos.x, y: pos.y, params: {width: params.width.v, opacity: tool.opacity, color: tool.color} });
+			connection.conn?.forEach(v=>v.send({ condition: 'start', x: pos.x, y: pos.y, params: {width: params.width.v, opacity: tool.opacity, color: tool.color} }));
 	};
 	const outMouseMove = async (e: MouseEvent) => {
 		if (e.buttons !== 1 || !pressed) return;
@@ -37,14 +38,14 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		mouseMove(e);
 
 		if (tool.type == 'Brush')
-			connection.conn?.send({ condition: 'move', x: pos.x, y: pos.y });
+			connection.conn?.forEach(v=>v.send({ condition: 'move', x: pos.x, y: pos.y }));
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;
 		pressed = false;
 		mouseUp(e);
 
-		connection.conn?.send({ condition: 'end', x: pos.x, y: pos.y });
+		connection.conn?.forEach(v=>v.send({ condition: 'end', x: pos.x, y: pos.y }));
 	};
 
 	return [outMouseDown, outMouseMove, outMouseUp];

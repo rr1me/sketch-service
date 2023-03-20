@@ -18,6 +18,5 @@
 }
 
 .iconUsing{
-  border-color: v.$usingClr;
-  box-shadow: 0 0 2px 2px v.$usingClr;
+  @include g.iconUsing
 }

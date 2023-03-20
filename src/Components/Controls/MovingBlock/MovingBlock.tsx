@@ -1,5 +1,5 @@
 import s from './MovingBlock.module.scss';
-import React, { ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 
 type side = 'top' |
 	'bottom' |
@@ -14,9 +14,10 @@ const MovingBlock = ({
 	outsideOffset,
 	gap,
 	locationOffsetSide,
-	locationOffset
+	locationOffset,
+	openEvent
 }: { children: React.ReactNode, name: ReactElement, side: side, outsideOffset: number, gap: number,
-	locationOffsetSide: side, locationOffset: number
+	locationOffsetSide: side, locationOffset: number, openEvent?: () => void
 }) => {
 	const [open, setOpen] = useState(false);
 	const [pointerEvents, setPointerEvents] = useState<object | null>(PE);
@@ -25,6 +26,8 @@ const MovingBlock = ({
 			if (!v) {
 				setTimeout(() => {
 					setPointerEvents(null);
+
+					if (openEvent) openEvent()
 				}, 300);
 			} else {
 				setPointerEvents(PE);

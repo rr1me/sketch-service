@@ -18,5 +18,10 @@
 
 @mixin iconButton {
   padding: 3px 6px;
-  display: flex;
+  //display: flex;
+}
+
+@mixin iconUsing{
+  border-color: v.$usingClr;
+  box-shadow: 0 0 2px 2px v.$usingClr;
 }
