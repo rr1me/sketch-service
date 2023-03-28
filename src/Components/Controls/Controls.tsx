@@ -17,7 +17,7 @@ const Controls: FC<IControls> = ({ canvas, connection }) => {
 			<Tools />
 			<Settings />
 			<History canvas={canvas}/>
-			<Connection canvas={canvas} connection={connection}/>
+			<Connection canvas={canvas}/>
 		</div>
 	);
 };

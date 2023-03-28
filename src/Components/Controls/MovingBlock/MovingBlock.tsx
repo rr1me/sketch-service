@@ -1,5 +1,5 @@
 import s from './MovingBlock.module.scss';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 type side = 'top' |
 	'bottom' |

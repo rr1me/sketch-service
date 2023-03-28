@@ -1,38 +1,19 @@
-import ic from '../../../Icons/Icons';
 import s from './Sections.module.scss';
 import { FC, ReactElement } from 'react';
-import Selector from '../../../Selector/Selector';
+import Rooms from './Rooms/Rooms';
+import CreateRoom from './CreateRoom/CreateRoom';
 
-const Sections: FC<{ section: number, rooms: any[] }> = ({ section, rooms }) => {
+const Sections: FC<{ section: number }> = ({ section }) => {
 
-	const onSlotsChange = (e:number) => {
-		console.log(e);
-	}
-
-	let elem: ReactElement | ReactElement[] = <></>
+	let elem: ReactElement = <></>
 	switch (section) {
 	case 0:
-		elem = rooms.map((v) =>
-				<div key={v.users[0].socketId} className={s.room}>
-					<span>{v.name}</span>
-					<div className={s.listEnd}>
-						{v.isPrivate ? <span>{ic.locker}</span> : null}
-						<span>{v.users.length}/{v.slots}</span>
-					</div>
-				</div>,
-			)
+		elem = <Rooms/>
 		break;
 	case 1:
-		elem = (
-			<>
-				<input placeholder='Name'/>
-				<input placeholder='Password'/>
-				<Selector options={['1', '2', '3']} value={0} onChange={onSlotsChange}/>
-			</>
-		)
+		elem = <CreateRoom/>
 		break;
 	}
-
 
 	return (
 		<div className={s.connList}>

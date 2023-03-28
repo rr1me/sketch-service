@@ -1,0 +1,6 @@
+@use '../SectionsGlobal.module' as sg;
+
+.createBtn{
+  align-self: flex-end;
+  padding: sg.$pdg;
+}

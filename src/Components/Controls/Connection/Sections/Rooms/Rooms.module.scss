@@ -1,0 +1,18 @@
+@use '../../../ControlsGlobal.module' as g;
+@use '../../../../../vars' as v;
+@use '../SectionsGlobal.module' as sg;
+
+.room{
+  border: v.$border;
+  border-radius: v.$br;
+  background-color: white;
+  padding: sg.$pdg;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.listEnd {
+  display: flex;
+  gap: 5px;
+}

@@ -11,6 +11,8 @@ import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
 import { connType } from '../../App';
+import { useContext } from 'react';
+import { ConnectionContext } from '../Controls/Connection/ConnectionProvider';
 
 const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, connection: connType) => {
 	const ctx = canvas.getContext('2d')!;

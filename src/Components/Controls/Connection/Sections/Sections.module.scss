@@ -1,16 +1,6 @@
 @use '../../ControlsGlobal.module' as g;
 @use '../../../../vars' as v;
-
-$pdg: 2px 10px;
-
-.room{
-  border: v.$border;
-  border-radius: v.$br;
-  background-color: white;
-  padding: $pdg;
-  display: flex;
-  justify-content: space-between;
-}
+@use './SectionsGlobal.module' as sg;
 
 .connList{
   display: flex;
@@ -18,14 +8,9 @@ $pdg: 2px 10px;
   gap: 10px;
 }
 
-.listEnd {
-  display: flex;
-  gap: 5px;
-}
-
 input{
   background-color: white;
   border-radius: v.$br;
   border: v.$border;
-  padding: $pdg;
+  padding: sg.$pdg;
 }
