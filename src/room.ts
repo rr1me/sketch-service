@@ -1,31 +1,26 @@
 export class Room implements IRoom{
 	readonly name: string;
-	// readonly hostSocketId: string;
-	// readonly hostPeerId: string;
 	readonly slots: number;
 	readonly isPrivate: boolean;
 	readonly password: string;
 
 	users: User[]
 
-
 	constructor(data: IRoom) {
 		this.name = data.name;
-		// this.hostSocketId = data.hostSocketId;
-		// this.hostPeerId = data.hostPeerId;
 		this.slots = data.slots;
 		this.isPrivate = data.isPrivate;
 		this.password = data.password;
+		this.users = data.users
 	}
 }
 
 export interface IRoom {
 	name: string;
-	// hostSocketId: string;
-	// hostPeerId: string;
 	slots: number;
 	isPrivate: boolean;
 	password: string;
+	users: User[]
 }
 
 export class User {

@@ -1,8 +1,10 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomsService } from './rooms.service';
-import { IRoom } from './room';
+import { IRoom, User } from './room';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 @WebSocketGateway({
 	namespace: 'gateway', cors: {
 		origin: '*',
@@ -31,15 +33,23 @@ export class SocketIoGateway {
 
 	@SubscribeMessage('makeRoom')
 	makeRoom(client: Socket, data: IRoom) {
-		// data.hostSocketId = client.id;
-		const i = this.roomsService.makeRoom(data);
-		client.emit('makeRoom', i);
-		client.emit('rooms', this.roomsService.rooms);
+		this.roomsService.makeRoom(data);
+		this.sendRooms();
 	}
 
 	@SubscribeMessage('subscribe')
-	subscribe(client: Socket){
-		client.emit('rooms', this.roomsService.rooms)
+	subscribe(client: Socket) {
+		client.emit('rooms', this.roomsService.rooms);
 		client.join('subscribed');
+	}
+
+	@SubscribeMessage('enter')
+	enterInRoom(client: Socket, data: { roomName: string, user: User }) {
+		this.roomsService.enter(data.roomName, data.user);
+		this.sendRooms();
+	}
+
+	sendRooms() {
+		this.server.to('subscribed').emit('rooms', this.roomsService.rooms);
 	}
 }

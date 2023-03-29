@@ -9,7 +9,7 @@ import { RoomsService } from './rooms.service';
 	providers: [
 		RoomsService,
 		SocketIoGateway,
-		PeerjsGateway
+		PeerjsGateway,
 	],
 })
 export class AppModule {
