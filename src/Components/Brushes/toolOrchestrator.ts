@@ -10,11 +10,8 @@ import { IPos } from '../MainFrame/useControlledCanvas';
 import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
-import { connType } from '../../App';
-import { useContext } from 'react';
-import { ConnectionContext } from '../Controls/Connection/ConnectionProvider';
 
-const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, connection: connType) => {
+const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, sendData: (data: any) => void) => {
 	const ctx = canvas.getContext('2d')!;
 
 	ctx.strokeStyle = tool.color;
@@ -28,10 +25,14 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		updCoords(e, pos, canvas);
 		pressed = true;
 		mouseDown(e);
-		console.log(connection.conn);
 
 		if (tool.type == 'Brush')
-			connection.conn?.forEach(v=>v.send({ condition: 'start', x: pos.x, y: pos.y, params: {width: params.width.v, opacity: tool.opacity, color: tool.color} }));
+			sendData({
+				condition: 'start',
+				x: pos.x,
+				y: pos.y,
+				params: { width: params.width.v, opacity: tool.opacity, color: tool.color },
+			});
 	};
 	const outMouseMove = async (e: MouseEvent) => {
 		if (e.buttons !== 1 || !pressed) return;
@@ -40,14 +41,14 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		mouseMove(e);
 
 		if (tool.type == 'Brush')
-			connection.conn?.forEach(v=>v.send({ condition: 'move', x: pos.x, y: pos.y }));
+			sendData({ condition: 'move', x: pos.x, y: pos.y });
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;
 		pressed = false;
 		mouseUp(e);
 
-		connection.conn?.forEach(v=>v.send({ condition: 'end', x: pos.x, y: pos.y }));
+		sendData({ condition: 'end', x: pos.x, y: pos.y });
 	};
 
 	return [outMouseDown, outMouseMove, outMouseUp];

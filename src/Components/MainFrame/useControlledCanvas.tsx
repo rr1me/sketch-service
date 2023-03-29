@@ -1,10 +1,10 @@
 import s from './ControlledCanvas.module.scss';
-import React, { RefObject, useEffect, useRef } from 'react';
+import React, { RefObject, useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IControlState } from '../../redux/slices/controlSlice';
 import toolOrchestrator from '../Brushes/toolOrchestrator';
-import { Socket } from 'socket.io-client';
-import { connType } from '../../App';
+import { ConnectionContext } from '../Controls/Connection/ConnectionProvider';
+import { updateEvents } from '../Controls/Connection/ConnectionUtils';
 
 interface IUseControlledCanvas {
 	canvas: RefObject<HTMLCanvasElement>,
@@ -23,7 +23,7 @@ const res = [
 	window.outerWidth - fixRatio,
 ];
 
-const useControlledCanvas = (connection: connType): IUseControlledCanvas => {
+const useControlledCanvas = (): IUseControlledCanvas => {
 	const dispatch = useDispatch();
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 	const params = useSelector((state: any) => { // am I really want to assign type for this callback? x_x
@@ -39,12 +39,20 @@ const useControlledCanvas = (connection: connType): IUseControlledCanvas => {
 			return state.baseBrushSlice;
 		}
 	});
+	const {connections: arrConn, getConnections, sendData} = useContext(ConnectionContext);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
 		if (canvas.current) {
-			const [mouseDown, mouseMove, mouseUp] = toolOrchestrator(tool, params, canvas.current, pos, dispatch, connection);
+
+
+			const connections = getConnections();
+			console.log(arrConn, connections);
+			if(connections !== null) updateEvents(canvas.current!, tool, connections);
+
+
+			const [mouseDown, mouseMove, mouseUp] = toolOrchestrator(tool, params, canvas.current, pos, dispatch, sendData);
 			canvas.current.addEventListener('mousedown', mouseDown);
 			canvas.current.addEventListener('mousemove', mouseMove);
 			canvas.current.addEventListener('mouseup', mouseUp);
@@ -54,21 +62,15 @@ const useControlledCanvas = (connection: connType): IUseControlledCanvas => {
 				canvas.current!.removeEventListener('mouseup', mouseUp);
 			};
 		}
-	}, [tool, params]);
+	}, [tool, params]); // todo might be good place to update peerConnection events
 
 	return {
 		canvas: canvas, controlledCanvas: (
-			<>
-				{/* <button onClick={makeHandle}>make</button> */}
-				{/* <button onClick={connHandle}>conn</button> */}
-				{/* <button onClick={sendHandle}>send</button> */}
-				{/* <input ref={inputpeer}/> */}
-				<canvas ref={canvas}
-						height={1080} width={1920}
-						style={{ height: res[0], width: res[1] }}
-						className={s.canvas}
-				/>
-			</>
+			<canvas ref={canvas}
+					height={1080} width={1920}
+					style={{ height: res[0], width: res[1] }}
+					className={s.canvas}
+			/>
 		),
 	};
 };
