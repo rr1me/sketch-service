@@ -1,30 +1,31 @@
 import { createContext, FC, ReactNode, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Peer, { DataConnection } from 'peerjs';
-import { IRoom } from './types';
+import { IRoom, IUser } from './types';
 import { IToolParam } from '../../../redux/slices/controlSlice';
 import { dataEvent } from './ConnectionUtils';
 
 let socket: Socket;
-let peer: Peer | null = null;
+// let peer: Peer | null = null;
 const connections: DataConnection[] = [];
 
 const sendData = (data: any) => connections.forEach(v => v.send(data));
 
 export const ConnectionContext = createContext<{
-	peer: Peer | null, connections: DataConnection[],
+	// peer: Peer | null,
+	connections: DataConnection[],
 	socket: Socket | null, rooms: IRoom[], openEvent: (() => void) | undefined, createRoom: (room: IRoom, tool: IToolParam) => void,
-	connectToPeer: (peerId: string, tool: IToolParam) => void, sendData: (data: any) => void, getConnections: () => typeof connections
+	enterInRoom: (room: IRoom, tool: IToolParam) => void, sendData: (data: any) => void, getConnections: () => typeof connections
 }>({
 		connections: [],
 		openEvent: undefined,
-		peer: null,
+		// peer: null,
 		rooms: [],
 		socket: null,
-		createRoom: (room: IRoom) => {
+		createRoom: () => {
 			console.log('undefined');
 		},
-		connectToPeer: (peerId, tool) => {
+		enterInRoom: () => {
 			console.log('undefined');
 		},
 		sendData: sendData,
@@ -52,18 +53,18 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 	const openEvent = () => {
 		socket.emit('subscribe');
-		socket.on('rooms', (data: any) => {
+		socket.on('rooms', (data: IRoom[]) => {
+			console.log(data);
 			setRooms(data);
 		});
 	};
 
-
 	const makePeer = () => {
-		peer = new Peer({
+		return new Peer({
 			host: 'localhost',
 			port: 3002,
 		});
-		return peer;
+		// return peer;
 	};
 
 	const createRoom = (room: IRoom, tool: IToolParam) => {
@@ -84,19 +85,46 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 			dataConnection.on('data', dataEvent(canvas!, tool));
 
+			dataConnection.on('close', () => {
+				console.log('[u] disconnect');
+			});
+
 			connections.push(dataConnection);
 		});
 	};
 
-	const connectToPeer = (peerId: string, tool: IToolParam) => {
+	const enterInRoom = (room: IRoom, tool: IToolParam) => {
 		const peer = makePeer();
 
 		peer.on('open', () => {
-			const connection = peer.connect(peerId);
+			const user: IUser = { name: 'ohellothere', peerId: peer.id, roomRole: 'User', socketId: socket.id };
+			socket.emit('enter', { roomName: room.name, user });
 
-			connection.on('data', dataEvent(canvas!, tool));
+			for (const user of room.users) {
+				const connection = peer.connect(user.peerId);
+				connection.on('data', dataEvent(canvas!, tool));
 
-			connections.push(connection);
+				connection.on('close', () => {
+					if (user.roomRole === 'Host') {
+						peer.destroy();
+						connections.splice(0, connections.length);
+					}
+
+					console.log('[x] disconnect');
+				});
+
+				connections.push(connection);
+			}
+		});
+
+		peer.on('connection', (dataConnection: DataConnection) => {
+			dataConnection.on('data', dataEvent(canvas!, tool));
+
+			dataConnection.on('close', () => {
+				console.log('[c] disconnect');
+			});
+
+			connections.push(dataConnection);
 		});
 	};
 
@@ -104,13 +132,13 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 	return (
 		<ConnectionContext.Provider value={{
-			peer,
+			// peer,
 			connections,
 			socket,
 			rooms,
 			openEvent,
 			createRoom,
-			connectToPeer,
+			enterInRoom,
 			sendData,
 			getConnections,
 		}}>

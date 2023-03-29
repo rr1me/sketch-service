@@ -1,5 +1,4 @@
 import { ITool, IToolType } from './itool';
-import { defMouseUp } from './toolOrchestrator';
 import { actions } from '../../redux/slices/controlSlice';
 
 const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
@@ -10,7 +9,6 @@ const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 
 	const radius = ctx.lineWidth;
 	const dist = getDist(radius);
-	console.log(dist);
 
 	const mouseDown = () => {
 		drawDot(ctx, pos.x, pos.y, radius)

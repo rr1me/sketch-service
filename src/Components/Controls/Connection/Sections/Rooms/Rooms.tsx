@@ -7,13 +7,13 @@ import { IControlState } from '../../../../../redux/slices/controlSlice';
 import { useSelector } from 'react-redux';
 
 const Rooms: FC = () => {
-	const {rooms, connectToPeer} = useContext(ConnectionContext)
+	const {rooms, connections, enterInRoom} = useContext(ConnectionContext)
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
 	const onEnterRoom = (room: IRoom) => () => {
 		console.log('trying enter');
 
-		connectToPeer(room.users[0].peerId, tool)
+		enterInRoom(room, tool)
 	}
 
 	return (
@@ -28,6 +28,8 @@ const Rooms: FC = () => {
 						</div>
 					</div>)
 			}
+			<button onClick={()=>{
+				console.log(connections);}}>check</button>
 		</>
 	)
 };

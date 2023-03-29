@@ -39,7 +39,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 			return state.baseBrushSlice;
 		}
 	});
-	const {connections: arrConn, getConnections, sendData} = useContext(ConnectionContext);
+	const {getConnections, sendData} = useContext(ConnectionContext);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -48,7 +48,6 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 
 			const connections = getConnections();
-			console.log(arrConn, connections);
 			if(connections !== null) updateEvents(canvas.current!, tool, connections);
 
 
