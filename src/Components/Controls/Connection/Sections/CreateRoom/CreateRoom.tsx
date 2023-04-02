@@ -1,6 +1,6 @@
 import Selector from '../../../../Selector/Selector';
 import s from './CreateRoom.module.scss';
-import { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { ConnectionContext } from '../../ConnectionProvider';
 import { IRoom } from '../../types';
 import { IControlState } from '../../../../../redux/slices/controlSlice';
@@ -16,6 +16,10 @@ const CreateRoom = () => {
 
 	const nameRef = useRef<HTMLInputElement>(null);
 	const passRef = useRef<HTMLInputElement>(null);
+	const checkboxPassRef = useRef<HTMLInputElement>(null);
+
+	const [isPassReadonly, setPassReadonly] = useState(true);
+	const onPassCheckbox = () => setPassReadonly(!checkboxPassRef.current?.checked as boolean);
 
 	const onCreateRoom = () => {
 		const name = nameRef.current!.value;
@@ -26,9 +30,7 @@ const CreateRoom = () => {
 			slots: Number(slotsOptions[slots]),
 			isPrivate: false,
 			password: password,
-			users: [
-				{ name: 'me', socketId: '', peerId: '', roomRole: 'Host' },
-			],
+			users: [],
 		};
 
 		createRoom(room, tool);
@@ -37,7 +39,12 @@ const CreateRoom = () => {
 	return (
 		<>
 			<input placeholder='Name' ref={nameRef} />
-			<input placeholder='Password' ref={passRef} />
+			<div className={s.passwordGroup}>
+				<div className={s.checkboxWrapper}>
+					<input type='checkbox' ref={checkboxPassRef} onClick={onPassCheckbox} />
+				</div>
+				<input placeholder='Password' ref={passRef} className={s.passwordInput} readOnly={isPassReadonly} />
+			</div>
 			<Selector options={slotsOptions} value={slots} onChange={onSlotsChange} />
 			<button className={s.createBtn} onClick={onCreateRoom}>Create</button>
 		</>
@@ -46,4 +53,4 @@ const CreateRoom = () => {
 
 export default CreateRoom;
 
-const slotsOptions = ['1', '2', '3'];
+const slotsOptions = ['2', '3', '4', '5'];

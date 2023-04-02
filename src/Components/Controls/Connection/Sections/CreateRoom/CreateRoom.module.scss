@@ -1,6 +1,29 @@
 @use '../SectionsGlobal.module' as sg;
+@use '../../../../../vars' as v;
 
-.createBtn{
-  align-self: flex-end;
-  padding: sg.$pdg;
+.createBtn {
+  @include sg.flexBtn
+}
+
+.passwordGroup {
+  display: flex;
+}
+
+.checkboxWrapper {
+  padding-inline: 8px;
+  background-color: v.$bg-clr;
+  display: flex;
+  align-items: center;
+  border: v.$border;
+  border-radius: v.$br 0 0 v.$br;
+}
+
+.passwordInput {
+  border-radius: 0 v.$br v.$br 0;
+  border-width: v.$bord-width v.$bord-width v.$bord-width 0;
+  width: 100%;
+}
+
+.passwordInput:read-only{
+  background-color: v.$bg-clr;
 }

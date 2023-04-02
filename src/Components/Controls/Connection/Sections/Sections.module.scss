@@ -2,10 +2,14 @@
 @use '../../../../vars' as v;
 @use './SectionsGlobal.module' as sg;
 
-.connList{
+@mixin sectionList{
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.connList{
+  @include sectionList
 }
 
 input{

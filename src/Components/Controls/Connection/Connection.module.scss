@@ -1,11 +1,13 @@
 @use '../ControlsGlobal.module' as g;
 @use '../../../vars' as v;
+@use './Sections/Sections.module' as s;
+@use "./Sections/SectionsGlobal.module" as sg;
 
-.connection{
+.connection {
   width: 250px;
   height: 200px;
   padding: 10px;
-  background-color: #f8f8f8;
+  background-color: v.$bg-clr;
   border: v.$border;
 
   //display: flex;
@@ -15,7 +17,7 @@
   border-radius: v.$br;
 }
 
-.ctrl{
+.ctrl {
   margin-bottom: 10px;
   display: flex;
   gap: 5px;
@@ -24,11 +26,19 @@
   //margin-bottom: 10px;
 }
 
-.ctrlButton{
+.ctrlButton {
   @include g.iconButton
   //padding: 2px 5px;
 }
 
-.iconUsing{
+.iconUsing {
   @include g.iconUsing
+}
+
+.connList {
+  @include s.sectionList
+}
+
+.applyBtn{
+  @include sg.flexBtn
 }

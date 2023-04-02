@@ -1,6 +1,7 @@
 $bg-clr: #F8F8F8;
 $bord-clr: #e8e8e8;
-$border: 1px solid $bord-clr;
+$bord-width: 1px;
+$border: $bord-width solid $bord-clr;
 
 //$fill-clr: #B3B3B3;
 $fill-clr: #c2c2c2;

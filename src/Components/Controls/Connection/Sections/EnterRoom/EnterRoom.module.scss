@@ -1,0 +1,5 @@
+@use '../SectionsGlobal.module' as sg;
+
+.createBtn{
+  @include sg.flexBtn
+}
