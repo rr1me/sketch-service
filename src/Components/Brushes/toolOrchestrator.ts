@@ -10,8 +10,9 @@ import { IPos } from '../MainFrame/useControlledCanvas';
 import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
+import { PeerData } from '../Controls/Connection/types';
 
-const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, sendData: (data: any) => void) => {
+const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, sendData: (data: PeerData) => void) => {
 	const ctx = canvas.getContext('2d')!;
 
 	ctx.strokeStyle = tool.color;
@@ -28,10 +29,13 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 
 		if (tool.type == 'Brush')
 			sendData({
-				condition: 'start',
-				x: pos.x,
-				y: pos.y,
-				params: { width: params.width.v, opacity: tool.opacity, color: tool.color },
+				type: 'Drawing',
+				data: {
+					condition: 'start',
+					x: pos.x,
+					y: pos.y,
+					params: { width: params.width.v, opacity: tool.opacity, color: tool.color }
+				}
 			});
 	};
 	const outMouseMove = async (e: MouseEvent) => {
@@ -41,14 +45,20 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		mouseMove(e);
 
 		if (tool.type == 'Brush')
-			sendData({ condition: 'move', x: pos.x, y: pos.y });
+			sendData({
+				type: 'Drawing',
+				data: { condition: 'move', x: pos.x, y: pos.y }
+			});
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;
 		pressed = false;
 		mouseUp(e);
 
-		sendData({ condition: 'end', x: pos.x, y: pos.y });
+		sendData({
+			type: 'Drawing',
+			data: { condition: 'end', x: pos.x, y: pos.y }
+		});
 	};
 
 	return [outMouseDown, outMouseMove, outMouseUp];

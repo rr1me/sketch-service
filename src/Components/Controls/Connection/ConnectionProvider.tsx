@@ -1,7 +1,7 @@
 import { createContext, Dispatch, FC, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Peer, { DataConnection } from 'peerjs';
-import { IRoom, IUser } from './types';
+import { IRoom, IUser, PeerData } from './types';
 import { IToolParam } from '../../../redux/slices/controlSlice';
 import { dataEvent } from './ConnectionUtils';
 import { useDispatch } from 'react-redux';
@@ -12,7 +12,9 @@ let socket: Socket;
 let peer: Peer;
 const connections: DataConnection[] = [];
 
-const sendData = (data: any) => connections.forEach(v => v.send(data));
+const sendData = (data: PeerData) => {
+	connections.forEach(v => v.send(data));
+};
 
 export const ConnectionContext = createContext<{
 	username: string,
@@ -22,9 +24,10 @@ export const ConnectionContext = createContext<{
 	openEvent: (() => void) | undefined,
 	createRoom: (room: IRoom, tool: IToolParam) => void,
 	enterInRoom: (room: IRoom, tool: IToolParam) => void,
-	sendData: (data: any) => void,
+	sendData: (data: PeerData) => void,
 	getConnections: () => typeof connections,
-	disconnect: () => void
+	disconnect: () => void,
+	kick: (peerId: string) => void
 }>({
 		username: '',
 		setUsername: () => {
@@ -42,10 +45,12 @@ export const ConnectionContext = createContext<{
 		getConnections: () => connections,
 		disconnect: () => {
 		},
+		kick: () => {
+		},
 	},
 );
 
-const { setRoomPresence } = actions;
+const { setRoomPresence, setConnectedRoomName } = actions;
 
 export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasElement | null }> = ({
 	children,
@@ -90,6 +95,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 		const peer = makePeer();
 
 		peer.on('open', (peerId: string) => {
+			dispatch(setConnectedRoomName(room.name));
 			room.users.push({ name: username, socketId: socket.id, peerId: peerId, roomRole: 'Host' });
 
 			socket.emit('makeRoom', room);
@@ -98,10 +104,13 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 		peer.on('connection', (dataConnection: DataConnection) => {
 			dataConnection.on('open', () => {
 				const save = canvas?.toDataURL();
-				dataConnection.send(save);
+				dataConnection.send({
+					type: 'Canvas',
+					data: save,
+				} as PeerData);
 			});
 
-			dataConnection.on('data', dataEvent(canvas!, tool));
+			dataConnection.on('data', dataEvent(canvas!, tool, disconnect));
 
 			dataConnection.on('close', () => {
 				console.log('[u] disconnect');
@@ -115,18 +124,19 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 		const peer = makePeer();
 
 		peer.on('open', () => {
+			dispatch(setConnectedRoomName(room.name));
 			const user: IUser = { name: username, peerId: peer.id, roomRole: 'User', socketId: socket.id };
 			socket.emit('enter', { roomName: room.name, user });
 
 			for (const user of room.users) {
 				const connection = peer.connect(user.peerId);
-				connection.on('data', dataEvent(canvas!, tool));
+				connection.on('data', dataEvent(canvas!, tool, disconnect));
 
 				connection.on('close', () => {
 					if (user.roomRole === 'Host') {
 						// peer.destroy();
 						// connections.splice(0, connections.length);
-						disconnect()
+						disconnect();
 					}
 
 					console.log('[x] disconnect');
@@ -137,7 +147,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 		});
 
 		peer.on('connection', (dataConnection: DataConnection) => {
-			dataConnection.on('data', dataEvent(canvas!, tool));
+			dataConnection.on('data', dataEvent(canvas!, tool, disconnect));
 
 			dataConnection.on('close', () => {
 				console.log('[c] disconnect');
@@ -155,6 +165,12 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 		connections.splice(0, connections.length);
 	};
 
+	const kick = (peerId: string) => {
+		connections.find(x=>x.peer === peerId)?.send({
+			type: 'Kick'
+		} as PeerData)
+	};
+
 	return (
 		<ConnectionContext.Provider value={{
 			// peer,
@@ -169,6 +185,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 			sendData,
 			getConnections,
 			disconnect,
+			kick,
 		}}>
 			{children}
 		</ConnectionContext.Provider>

@@ -5,8 +5,14 @@ import lineSlice from './slices/lineSlice';
 import squareSlice from './slices/squareSlice';
 import connectionSlice from './slices/connectionSlice';
 
+const mySliceLogger = () => (next: any) => <A extends { type: string }>(action: A) => {
+	if (action.type.startsWith('connectionSlice')) console.log('Dispatching:', action.type);
+	return next(action);
+};
+
 export const store = configureStore({
 	reducer: { controlSlice, baseBrushSlice, lineSlice, squareSlice, connectionSlice },
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mySliceLogger),
 });
 
 export default store;

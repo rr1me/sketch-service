@@ -15,3 +15,10 @@ export type IRoom = {
 
 	users: IUser[]
 }
+
+type PeerDataType = 'Drawing' | 'Canvas' | 'Kick'
+
+export type PeerData = {
+	type: PeerDataType;
+	data: object | string | undefined
+}

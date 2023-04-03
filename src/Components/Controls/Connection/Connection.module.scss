@@ -1,6 +1,5 @@
 @use '../ControlsGlobal.module' as g;
 @use '../../../vars' as v;
-@use './Sections/Sections.module' as s;
 @use "./Sections/SectionsGlobal.module" as sg;
 
 .connection {
@@ -10,10 +9,6 @@
   background-color: v.$bg-clr;
   border: v.$border;
 
-  //display: flex;
-  //flex-direction: column;
-  //gap: 5px;
-
   border-radius: v.$br;
 }
 
@@ -22,13 +17,10 @@
   display: flex;
   gap: 5px;
   justify-content: flex-end;
-
-  //margin-bottom: 10px;
 }
 
 .ctrlButton {
   @include g.iconButton
-  //padding: 2px 5px;
 }
 
 .iconUsing {
@@ -36,14 +28,14 @@
 }
 
 .connList {
-  @include s.sectionList
+  @include sg.sectionList
 }
 
-.applyBtn{
+.applyBtn {
   @include sg.flexBtn
 }
 
-.rightToLeft{
+.rightToLeft {
   direction: rtl;
   justify-content: normal;
 }

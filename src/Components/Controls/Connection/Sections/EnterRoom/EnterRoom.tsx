@@ -10,7 +10,7 @@ const { setRoomName } = actions;
 
 const EnterRoom: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { roomName } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
+	const { roomNameForExternalConnection } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
 
 	const { rooms, enterInRoom } = useContext(ConnectionContext);
 	const nameRef = useRef<HTMLInputElement>(null);
@@ -19,7 +19,7 @@ const EnterRoom: FC = () => {
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
 	const onConnect = () => {
-		const room = rooms.find(x => x.name === roomName);
+		const room = rooms.find(x => x.name === roomNameForExternalConnection);
 
 		if (room === undefined) {
 			console.log('no such room'); // todo error system
@@ -42,7 +42,7 @@ const EnterRoom: FC = () => {
 	return (
 		<>
 			<input ref={nameRef}
-				   value={roomName} onChange={onNameChange}
+				   value={roomNameForExternalConnection} onChange={onNameChange}
 				   placeholder='Room name' />
 			<input ref={passRef}
 				   placeholder='Password' />

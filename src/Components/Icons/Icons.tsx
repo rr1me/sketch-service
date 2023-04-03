@@ -4,7 +4,7 @@ import React from 'react';
 import { FaListAlt, FaPaintBrush, FaToolbox } from 'react-icons/fa';
 import { IoIosArrowDown, IoMdSquare } from 'react-icons/io';
 import { BsCircleFill, BsFillTriangleFill } from 'react-icons/bs';
-import { HiOutlineMinus } from 'react-icons/hi';
+import { HiOutlineMinus, HiUserRemove } from 'react-icons/hi';
 import {
 	RiArrowGoBackFill,
 	RiArrowGoForwardFill,
@@ -59,6 +59,7 @@ const locker = <AiFillLock/>
 const exit = <ImExit/>
 const users = <FiUsers/>
 const roomSettings = <MdOutlineSettingsEthernet/>
+const kickUser = <HiUserRemove/>
 
 export default { paintBrush, square, circle, line, triangle, fill,
 	arrowBack, arrowForward, clean,
@@ -70,5 +71,5 @@ export default { paintBrush, square, circle, line, triangle, fill,
 
 	connection, list, plus, connect, filter, locker,
 
-	exit, users, roomSettings
+	exit, users, roomSettings, kickUser
 };

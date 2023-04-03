@@ -1,0 +1,22 @@
+@use '../SectionsGlobal.module' as sg;
+
+.user {
+  @include sg.sectionRowBlock
+}
+
+.rowBlockEnd {
+  @include sg.rowBlockEnd
+}
+
+button {
+  border: none;
+  transition: 0.1s ease-in;
+}
+
+button:hover {
+  transform: scale(120%);
+}
+
+button:active{
+  transform: scale(100%);
+}

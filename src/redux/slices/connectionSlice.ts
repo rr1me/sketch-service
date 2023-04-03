@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface IConnectionSlice {
 	inRoom: boolean;
 	section: number;
-	roomName: string;
+	roomNameForExternalConnection: string;
+	connectedRoomName: string;
 }
 
 const connectionSlice = createSlice({
@@ -11,19 +12,20 @@ const connectionSlice = createSlice({
 	initialState: {
 		inRoom: false,
 		section: 0,
-		roomName: '',
+		roomNameForExternalConnection: '',
+		connectedRoomName: '',
 	} as IConnectionSlice,
 	reducers: {
 		setSection: (state, { payload }) => {
-			console.log(payload);
 			state.section = payload;
 		},
 		setRoomName: (state, { payload }) => {
-			console.log(payload);
-			state.roomName = payload;
+			state.roomNameForExternalConnection = payload;
+		},
+		setConnectedRoomName: (state, { payload }) => {
+			state.connectedRoomName = payload;
 		},
 		setRoomPresence: (state, { payload }) => {
-			console.log(payload);
 			state.inRoom = payload;
 			state.section = 0;
 		},
