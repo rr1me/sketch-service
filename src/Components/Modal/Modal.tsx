@@ -25,7 +25,7 @@ const Modal: FC<{ elemRef: RefObject<HTMLElement>, state: boolean, setState: (e:
 
 		const closeDP = (e: any) => {
 			if (e.composedPath()[0].id !== id){
-				console.log(e.composedPath()[0], '/', id, e.composedPath()[0].id !== id);
+				// console.log(e.composedPath()[0], '/', id, e.composedPath()[0].id !== id);
 				setState(false);
 			}
 		}

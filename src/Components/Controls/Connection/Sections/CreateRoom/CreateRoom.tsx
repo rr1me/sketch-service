@@ -7,7 +7,7 @@ import { IControlState } from '../../../../../redux/slices/controlSlice';
 import { useSelector } from 'react-redux';
 
 const CreateRoom = () => {
-	const { createRoom } = useContext(ConnectionContext);
+	const { rooms, createRoom } = useContext(ConnectionContext);
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
 	const [slots, setSlots] = useState(0);
@@ -23,6 +23,12 @@ const CreateRoom = () => {
 
 	const onCreateRoom = () => {
 		const name = nameRef.current!.value;
+
+		if (rooms.some(x => x.name === name)) {
+			console.log('there is already the room with that name'); // todo error system
+			return;
+		}
+
 		const password = passRef.current!.value;
 
 		const room: IRoom = {

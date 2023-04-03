@@ -1,29 +1,22 @@
 import s from './Sections.module.scss';
-import { Dispatch, FC, ReactElement, SetStateAction, useState } from 'react';
+import { FC, ReactElement } from 'react';
 import Rooms from './Rooms/Rooms';
 import CreateRoom from './CreateRoom/CreateRoom';
 import EnterRoom from './EnterRoom/EnterRoom';
-import { IRoom } from '../types';
-import { IBaseBrushSlice } from '../../../../redux/slices/baseBrushSlice';
 import { useSelector } from 'react-redux';
 import { IConnectionSlice } from '../../../../redux/slices/connectionSlice';
+import Users from './Users/Users';
 
 const Sections: FC = () => {
-	const {section} = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
-	// const [room, setRoom] = useState<IRoom>({ isPrivate: false, name: '', password: '', slots: 0, users: [] });
-
-	// const onChoosingRoom = (room: IRoom) => () => {
-	// 	setRoom(room)
-	// 	setSection(2);
-	// };
+	const { section, inRoom } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
 
 	let elem: ReactElement = <></>;
 	switch (section) {
 	case 0:
-		elem = <Rooms />;
+		elem = inRoom ? <Users/> : <Rooms />;
 		break;
 	case 1:
-		elem = <CreateRoom />;
+		elem = inRoom ? <></> : <CreateRoom />;
 		break;
 	case 2:
 		elem = <EnterRoom />;

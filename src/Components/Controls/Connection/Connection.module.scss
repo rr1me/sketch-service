@@ -42,3 +42,8 @@
 .applyBtn{
   @include sg.flexBtn
 }
+
+.rightToLeft{
+  direction: rtl;
+  justify-content: normal;
+}

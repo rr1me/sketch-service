@@ -13,12 +13,13 @@ import {
 	RiSettings3Fill,
 } from 'react-icons/ri';
 import { GiVacuumCleaner } from 'react-icons/gi';
-import { MdCastConnected, MdOutlineHistoryEdu, MdSettings } from 'react-icons/md';
+import { MdCastConnected, MdOutlineHistoryEdu, MdOutlineSettingsEthernet, MdSettings } from 'react-icons/md';
 import { FcSettings } from 'react-icons/fc';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { GoTools } from 'react-icons/go';
 import { AiFillLock, AiFillPlusSquare } from 'react-icons/ai';
-import { FiFilter } from 'react-icons/fi';
+import { FiFilter, FiUsers } from 'react-icons/fi';
+import { ImExit } from 'react-icons/im';
 
 const paintBrush = <FaPaintBrush />;
 const square = <IoMdSquare />;
@@ -55,6 +56,10 @@ const filter = <FiFilter/>
 const locker = <AiFillLock/>
 
 
+const exit = <ImExit/>
+const users = <FiUsers/>
+const roomSettings = <MdOutlineSettingsEthernet/>
+
 export default { paintBrush, square, circle, line, triangle, fill,
 	arrowBack, arrowForward, clean,
 	leftArrow, rightArrow,
@@ -63,5 +68,7 @@ export default { paintBrush, square, circle, line, triangle, fill,
 
 	selectorArrow,
 
-	connection, list, plus, connect, filter, locker
+	connection, list, plus, connect, filter, locker,
+
+	exit, users, roomSettings
 };

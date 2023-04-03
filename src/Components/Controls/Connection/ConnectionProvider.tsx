@@ -4,15 +4,17 @@ import Peer, { DataConnection } from 'peerjs';
 import { IRoom, IUser } from './types';
 import { IToolParam } from '../../../redux/slices/controlSlice';
 import { dataEvent } from './ConnectionUtils';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../redux/store';
+import { actions } from '../../../redux/slices/connectionSlice';
 
 let socket: Socket;
-// let peer: Peer | null = null;
+let peer: Peer;
 const connections: DataConnection[] = [];
 
 const sendData = (data: any) => connections.forEach(v => v.send(data));
 
 export const ConnectionContext = createContext<{
-	// peer: Peer | null,
 	username: string,
 	setUsername: Dispatch<SetStateAction<string>>
 	connections: DataConnection[],
@@ -21,7 +23,8 @@ export const ConnectionContext = createContext<{
 	createRoom: (room: IRoom, tool: IToolParam) => void,
 	enterInRoom: (room: IRoom, tool: IToolParam) => void,
 	sendData: (data: any) => void,
-	getConnections: () => typeof connections
+	getConnections: () => typeof connections,
+	disconnect: () => void
 }>({
 		username: '',
 		setUsername: () => {
@@ -37,13 +40,18 @@ export const ConnectionContext = createContext<{
 		},
 		sendData: sendData,
 		getConnections: () => connections,
+		disconnect: () => {
+		},
 	},
 );
+
+const { setRoomPresence } = actions;
 
 export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasElement | null }> = ({
 	children,
 	canvas,
 }) => {
+	const dispatch = useDispatch<AppDispatch>();
 	const [username, setUsername] = useState('');
 	const [rooms, setRooms] = useState<IRoom[]>([]);
 
@@ -70,11 +78,12 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 	};
 
 	const makePeer = () => {
-		return new Peer({
+		dispatch(setRoomPresence(true));
+		peer = new Peer({
 			host: 'localhost',
 			port: 3002,
 		});
-		// return peer;
+		return peer;
 	};
 
 	const createRoom = (room: IRoom, tool: IToolParam) => {
@@ -115,8 +124,9 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 				connection.on('close', () => {
 					if (user.roomRole === 'Host') {
-						peer.destroy();
-						connections.splice(0, connections.length);
+						// peer.destroy();
+						// connections.splice(0, connections.length);
+						disconnect()
 					}
 
 					console.log('[x] disconnect');
@@ -139,6 +149,12 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 	const getConnections = () => connections;
 
+	const disconnect = () => {
+		dispatch(setRoomPresence(false));
+		peer.destroy();
+		connections.splice(0, connections.length);
+	};
+
 	return (
 		<ConnectionContext.Provider value={{
 			// peer,
@@ -152,6 +168,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 			enterInRoom,
 			sendData,
 			getConnections,
+			disconnect,
 		}}>
 			{children}
 		</ConnectionContext.Provider>

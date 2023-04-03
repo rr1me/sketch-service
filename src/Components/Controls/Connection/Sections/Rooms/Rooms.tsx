@@ -12,7 +12,6 @@ const { setRoomName, setSection } = actions;
 const Rooms: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { rooms } = useContext(ConnectionContext);
-	// const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
 
 	const onChoosingRoom = (room: IRoom) => () => {
 		dispatch(setRoomName(room.name));
