@@ -1,5 +1,5 @@
 import s from './ControlledCanvas.module.scss';
-import React, { RefObject, useContext, useEffect, useRef } from 'react';
+import React, { RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IControlState } from '../../redux/slices/controlSlice';
 import toolOrchestrator from '../Brushes/toolOrchestrator';
@@ -17,12 +17,13 @@ export interface IPos {
 }
 
 const pos: IPos = { x: 0, y: 0 };
-const fixRatio = 50;
-const res = [
-	(window.outerHeight - 71) - fixRatio,
-	window.outerWidth - fixRatio,
-];
+// const fixRatio = 50;
+// const res = [
+// 	(window.outerHeight - 71) - fixRatio,
+// 	window.outerWidth - fixRatio,
+// ];
 
+const isFullscreen = window.innerWidth === screen.availWidth && window.outerWidth === screen.availWidth;
 const useControlledCanvas = (): IUseControlledCanvas => {
 	const dispatch = useDispatch();
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
@@ -43,6 +44,9 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
+	const [height, setHeight] = useState((window.outerHeight - 71) - getRatio())
+	const [width, setWidth] = useState(window.outerWidth - getRatio())
+
 	useEffect(() => {
 		if (canvas.current) {
 
@@ -55,10 +59,20 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 			canvas.current.addEventListener('mousedown', mouseDown);
 			canvas.current.addEventListener('mousemove', mouseMove);
 			canvas.current.addEventListener('mouseup', mouseUp);
+
+			const resizeEvent = () => {
+				const r = getRatio()
+				setHeight((window.outerHeight - 71) - r)
+				setWidth(window.outerWidth - r)
+			}
+
+			window.addEventListener('resize', resizeEvent)
 			return () => {
 				canvas.current!.removeEventListener('mousedown', mouseDown);
 				canvas.current!.removeEventListener('mousemove', mouseMove);
 				canvas.current!.removeEventListener('mouseup', mouseUp);
+
+				window.removeEventListener('resize', resizeEvent)
 			};
 		}
 	}, [tool, params]); // todo might be good place to update peerConnection events
@@ -67,7 +81,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 		canvas: canvas, controlledCanvas: (
 			<canvas ref={canvas}
 					height={1080} width={1920}
-					style={{ height: res[0], width: res[1] }}
+					style={{ height: height, width: width }}
 					className={s.canvas}
 			/>
 		),
@@ -75,3 +89,8 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 };
 
 export default useControlledCanvas;
+
+const getRatio = () => {
+	const isFullscreen = window.innerWidth === screen.availWidth && window.outerWidth === screen.availWidth;
+	return isFullscreen ? 50 : 66
+}

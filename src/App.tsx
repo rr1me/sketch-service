@@ -15,7 +15,7 @@ function App() {
 			setCanvasReference(canvas.current);
 	}, [canvas])
 
-	return ( // todo think about that getConnection getter xd. mb put provider higher than app component
+	return (
 		<ConnectionProvider canvas={canvasReference}>
 			<div className={s.app}>
 				<Controls canvas={canvas}/>
