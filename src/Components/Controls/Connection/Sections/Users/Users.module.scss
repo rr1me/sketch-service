@@ -8,15 +8,15 @@
   @include sg.rowBlockEnd
 }
 
-button {
+.userCtrlBtn {
   border: none;
   transition: 0.1s ease-in;
 }
 
-button:hover {
+.userCtrlBtn:hover {
   transform: scale(120%);
 }
 
-button:active{
+.userCtrlBtn:active{
   transform: scale(100%);
 }

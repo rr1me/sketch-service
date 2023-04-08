@@ -26,7 +26,7 @@ const Rooms: FC = () => {
 					<div key={v.users[0].socketId} className={s.room} onClick={onChoosingRoom(v)}>
 						<span>{v.name}</span>
 						<div className={s.rowBlockEnd}>
-							{v.isPrivate ? <span>{ic.locker}</span> : null}
+							{v.password !== '' ? <span>{ic.locker}</span> : null}
 							<span>{v.users.length}/{v.slots}</span>
 						</div>
 					</div>)

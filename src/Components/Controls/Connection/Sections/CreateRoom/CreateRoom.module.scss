@@ -1,6 +1,11 @@
 @use '../SectionsGlobal.module' as sg;
 @use '../../../../../vars' as v;
 
+@mixin readOnlyInput{
+  background-color: v.$bg-clr;
+  cursor: default;
+}
+
 .createBtn {
   @include sg.flexBtn
 }
@@ -18,6 +23,10 @@
   border-radius: v.$br 0 0 v.$br;
 }
 
+.checkBox{
+  cursor: pointer;
+}
+
 .passwordInput {
   border-radius: 0 v.$br v.$br 0;
   border-width: v.$bord-width v.$bord-width v.$bord-width 0;
@@ -25,5 +34,9 @@
 }
 
 .passwordInput:read-only{
-  background-color: v.$bg-clr;
+  @include readOnlyInput
+}
+
+.nameInput:read-only{
+  @include readOnlyInput
 }

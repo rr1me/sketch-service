@@ -13,7 +13,7 @@ const { setSection } = actions;
 const Connection: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { section, inRoom } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
-	const { openEvent, username, setUsername, disconnect } = useContext(ConnectionContext);
+	const { amIHost, openEvent, username, setUsername, disconnect } = useContext(ConnectionContext);
 	const nameRef = useRef<HTMLInputElement>(null);
 
 	const ctrlButtons = inRoom ? [
@@ -29,6 +29,8 @@ const Connection: FC = () => {
 
 	const onNameApply = () => setUsername(nameRef.current?.value as string);
 
+	const shouldISeeSettings = (index: number) => index === 1 && inRoom && !amIHost;
+
 	return (
 		<MovingBlock name={ic.connection} side={'top'} outsideOffset={250} gap={10} locationOffsetSide={'right'}
 					 locationOffset={10} openEvent={openEvent}>
@@ -38,8 +40,8 @@ const Connection: FC = () => {
 						<div className={s.ctrl + (inRoom ? ' ' + s.rightToLeft : '')}>
 							{inRoom && <button className={s.ctrlButton} onClick={disconnect}>{ic.exit}</button>}
 							{ctrlButtons.map((v, i) =>
-								<button key={i} onClick={ctrlButtonHandler(i)}
-										className={s.ctrlButton + (i === section ? ' ' + s.iconUsing : '')}>{v}</button>,
+								<button key={i} onClick={shouldISeeSettings(i) ? undefined : ctrlButtonHandler(i)}
+										className={s.ctrlButton + (i === section ? ' ' + s.iconUsing : '') + (shouldISeeSettings(i) ? ' ' + s.ctrlButtonReadonly : '' )}>{v}</button>,
 							)}
 						</div>
 

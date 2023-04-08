@@ -26,10 +26,11 @@ const EnterRoom: FC = () => {
 			return;
 		}
 
-		if (room.isPrivate && room.password !== passRef.current?.value) {
+		if (room.password !== '' && room.password !== passRef.current?.value) {
 			console.log('wrong password');
 			return;
 		}
+		console.log(room);
 
 		enterInRoom(room, tool);
 	};

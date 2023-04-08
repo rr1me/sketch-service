@@ -16,7 +16,8 @@ const Sections: FC = () => {
 		elem = inRoom ? <Users/> : <Rooms />;
 		break;
 	case 1:
-		elem = inRoom ? <></> : <CreateRoom />;
+		// elem = inRoom ? <></> : <CreateRoom />;
+		elem = <CreateRoom />;
 		break;
 	case 2:
 		elem = <EnterRoom />;

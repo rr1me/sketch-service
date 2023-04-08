@@ -10,7 +10,6 @@ export type IUser = {
 export type IRoom = {
 	name: string;
 	slots: number;
-	isPrivate: boolean;
 	password: string;
 
 	users: IUser[]

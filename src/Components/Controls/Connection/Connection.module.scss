@@ -23,6 +23,12 @@
   @include g.iconButton
 }
 
+.ctrlButtonReadonly{
+  cursor: default;
+  background-color: v.$bg-clr;
+  box-shadow: 0 0 0 1px v.$bord-clr;
+}
+
 .iconUsing {
   @include g.iconUsing
 }
