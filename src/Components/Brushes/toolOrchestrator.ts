@@ -10,7 +10,8 @@ import { IPos } from '../MainFrame/useControlledCanvas';
 import { updCoords } from './properties';
 import { IParamObject } from '../../redux/slices/INumberParam';
 import { ILineSlice, tLineCap } from '../../redux/slices/lineSlice';
-import { PeerData } from '../Controls/Connection/types';
+import { Body, PeerData } from '../Controls/Connection/types';
+import { CircleCallback, IToolType, LineCallback, RectangleCallback, SquareCallback } from './itool';
 
 const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, sendData: (data: PeerData) => void) => {
 	const ctx = canvas.getContext('2d')!;
@@ -20,6 +21,11 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 
 	let pressed = false;
 
+	const sendDrawingData = (data: Body) => sendData({
+		type: 'Drawing',
+		body: data,
+	});
+
 	const [mouseDown, mouseMove, mouseUp] = getTool(tool, params, canvas, pos, dispatch, ctx);
 
 	const outMouseDown = (e: MouseEvent) => {
@@ -28,14 +34,12 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		mouseDown(e);
 
 		if (tool.type == 'Brush')
-			sendData({
-				type: 'Drawing',
-				data: {
-					condition: 'start',
-					x: pos.x,
-					y: pos.y,
-					params: { width: params.width.v, opacity: tool.opacity, color: tool.color }
-				}
+			sendDrawingData({
+				type: tool.type,
+				condition: 'start',
+				x: pos.x,
+				y: pos.y,
+				params: { width: params.width.v, opacity: tool.opacity, color: tool.color },
 			});
 	};
 	const outMouseMove = async (e: MouseEvent) => {
@@ -45,26 +49,79 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		mouseMove(e);
 
 		if (tool.type == 'Brush')
-			sendData({
-				type: 'Drawing',
-				data: { condition: 'move', x: pos.x, y: pos.y }
+			sendDrawingData({
+				type: tool.type,
+				condition: 'move',
+				x: pos.x,
+				y: pos.y,
+				params: { width: params.width.v, opacity: tool.opacity, color: tool.color },
 			});
 	};
 	const outMouseUp = (e: MouseEvent) => {
 		if (!pressed) return;
 		pressed = false;
-		mouseUp(e);
+		const endCallback = mouseUp(e);
 
-		sendData({
-			type: 'Drawing',
-			data: { condition: 'end', x: pos.x, y: pos.y }
-		});
+		// if (tool.type === 'Brush')
+		// 	sendDrawingData({
+		// 		type: tool.type,
+		// 		condition: 'start',
+		// 		x: pos.x,
+		// 		y: pos.y,
+		// 		params: { width: params.width.v, opacity: tool.opacity, color: tool.color },
+		// 	});
+
+		if (tool.type === 'Rectangle') {
+			const { first, second, third } = endCallback as RectangleCallback;
+			sendDrawingData({
+				type: tool.type,
+				first, second, third, params: {
+					opacity: tool.opacity,
+					color: tool.color,
+				},
+			});
+		}
+
+		if (tool.type === 'Square') {
+			const { start, size } = endCallback as SquareCallback;
+			sendDrawingData({
+				type: tool.type,
+				start, size, params: {
+					opacity: tool.opacity,
+					color: tool.color,
+				},
+			});
+		}
+
+		if (tool.type === 'Line') {
+			const { start, end } = endCallback as LineCallback;
+			sendDrawingData({
+				type: tool.type,
+				start, end, params: {
+					width: ctx.lineWidth,
+					opacity: tool.opacity,
+					color: tool.color,
+					cap: ctx.lineCap,
+				},
+			});
+		}
+
+		if (tool.type === 'Circle') {
+			const { center, radius } = endCallback as CircleCallback;
+			sendDrawingData({
+				type: tool.type,
+				center, radius, params: {
+					opacity: tool.opacity,
+					color: tool.color,
+				},
+			});
+		}
 	};
 
 	return [outMouseDown, outMouseMove, outMouseUp];
 };
 
-const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, ctx: CanvasRenderingContext2D) => {
+const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasElement, pos: IPos, dispatch: AppDispatch, ctx: CanvasRenderingContext2D): IToolType => {
 	ctx.globalAlpha = tool.opacity;
 	const type = tool.type;
 	switch (type) {
@@ -89,7 +146,7 @@ const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasEleme
 };
 
 export const defMouseUp = (type: brushType, ctx: CanvasRenderingContext2D, dispatch: AppDispatch, canvas: HTMLCanvasElement) => {
-	ctx.closePath();
+	// ctx.closePath();
 	const items = canvas.toDataURL();
 
 	dispatch(actions.save({ type: type, save: items }));

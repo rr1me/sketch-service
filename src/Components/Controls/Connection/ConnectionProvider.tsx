@@ -112,7 +112,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 				const save = canvas?.toDataURL();
 				dataConnection.send({
 					type: 'Canvas',
-					data: save,
+					body: save,
 				} as PeerData);
 			});
 

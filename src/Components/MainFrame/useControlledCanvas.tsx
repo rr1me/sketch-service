@@ -17,13 +17,7 @@ export interface IPos {
 }
 
 const pos: IPos = { x: 0, y: 0 };
-// const fixRatio = 50;
-// const res = [
-// 	(window.outerHeight - 71) - fixRatio,
-// 	window.outerWidth - fixRatio,
-// ];
 
-const isFullscreen = window.innerWidth === screen.availWidth && window.outerWidth === screen.availWidth;
 const useControlledCanvas = (): IUseControlledCanvas => {
 	const dispatch = useDispatch();
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
