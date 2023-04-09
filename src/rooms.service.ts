@@ -54,4 +54,11 @@ export class RoomsService {
 
 		return true;
 	}
+
+	changeRoom(room: IRoom){
+		const roomToChange = this.rooms.find(x=>x.name);
+
+		roomToChange.slots = room.slots;
+		roomToChange.password = room.password
+	}
 }

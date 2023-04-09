@@ -22,7 +22,7 @@ export class SocketIoGateway {
 
 	handleConnection(client: Socket) {
 		console.log(`Client ${client.id} connected.`);
-		this.server.emit('message', `Welcome, client ${client.id}!`);
+		client.emit('message', `Welcome, client ${client.id}!`);
 	}
 
 	@SubscribeMessage('message')
@@ -46,6 +46,12 @@ export class SocketIoGateway {
 	@SubscribeMessage('enter')
 	enterInRoom(client: Socket, data: { roomName: string, user: User }) {
 		this.roomsService.enter(data.roomName, data.user);
+		this.sendRooms();
+	}
+
+	@SubscribeMessage('changeRoom')
+	changeRoom(client: Socket, data: IRoom){
+		this.roomsService.changeRoom(data);
 		this.sendRooms();
 	}
 

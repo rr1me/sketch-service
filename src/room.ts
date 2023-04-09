@@ -1,15 +1,13 @@
 export class Room implements IRoom{
 	readonly name: string;
-	readonly slots: number;
-	readonly isPrivate: boolean;
-	readonly password: string;
+	slots: number;
+	password: string;
 
 	users: User[]
 
 	constructor(data: IRoom) {
 		this.name = data.name;
 		this.slots = data.slots;
-		this.isPrivate = data.isPrivate;
 		this.password = data.password;
 		this.users = data.users
 	}
@@ -18,7 +16,6 @@ export class Room implements IRoom{
 export interface IRoom {
 	name: string;
 	slots: number;
-	isPrivate: boolean;
 	password: string;
 	users: User[]
 }
