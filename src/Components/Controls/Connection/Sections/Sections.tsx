@@ -6,6 +6,7 @@ import EnterRoom from './EnterRoom/EnterRoom';
 import { useSelector } from 'react-redux';
 import { IConnectionSlice } from '../../../../redux/slices/connectionSlice';
 import Users from './Users/Users';
+import Filters from './Filters/Filters';
 
 const Sections: FC = () => {
 	const { section, inRoom } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
@@ -20,6 +21,9 @@ const Sections: FC = () => {
 		break;
 	case 2:
 		elem = <EnterRoom />;
+		break;
+	case 3:
+		elem = <Filters />
 		break;
 	}
 

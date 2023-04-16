@@ -26,10 +26,17 @@ const EnterRoom: FC = () => {
 			return;
 		}
 
+		console.log(room.users.length, room.slots);
+		if (room.users.length >= room.slots){
+			console.log('room is full');
+			return;
+		}
+
 		if (room.password !== '' && room.password !== passRef.current?.value) {
 			console.log('wrong password');
 			return;
 		}
+
 		console.log(room);
 
 		enterInRoom(room, tool);

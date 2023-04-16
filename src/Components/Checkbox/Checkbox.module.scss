@@ -1,0 +1,31 @@
+@use '../../vars' as v;
+@use '../Controls/ControlsGlobal.module' as g;
+
+$pxScale: 15px;
+
+.checkbox{
+  background-color: white;
+  border: 1px solid v.$fill-clr;
+  border-radius: v.$br;
+
+  //transform: scale(110%);
+  width: $pxScale;
+  height: $pxScale;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  user-select: none;
+  cursor: pointer;
+
+  transition: 0.1s ease-in-out;
+
+  position: relative;
+  top: 1px;
+}
+
+.checked{
+  border-color: v.$usingClr;
+  box-shadow: 0 0 1px 1px v.$usingClr;
+}
