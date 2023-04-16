@@ -62,15 +62,6 @@ const toolOrchestrator = (tool: IToolParam, params: IParamObject, canvas: HTMLCa
 		pressed = false;
 		const endCallback = mouseUp(e);
 
-		// if (tool.type === 'Brush')
-		// 	sendDrawingData({
-		// 		type: tool.type,
-		// 		condition: 'start',
-		// 		x: pos.x,
-		// 		y: pos.y,
-		// 		params: { width: params.width.v, opacity: tool.opacity, color: tool.color },
-		// 	});
-
 		if (tool.type === 'Rectangle') {
 			const { first, second, third } = endCallback as RectangleCallback;
 			sendDrawingData({
@@ -146,7 +137,6 @@ const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasEleme
 };
 
 export const defMouseUp = (type: brushType, ctx: CanvasRenderingContext2D, dispatch: AppDispatch, canvas: HTMLCanvasElement) => {
-	// ctx.closePath();
 	const items = canvas.toDataURL();
 
 	dispatch(actions.save({ type: type, save: items }));

@@ -17,11 +17,9 @@ const fill = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 		dispatch(save({type: 'Fill', save: items}));
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	const mouseUp = () => {};
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	const mouseMove = (e: MouseEvent) => {};
+	const mouseMove = () => {};
 
 	return [mouseDown, mouseMove, mouseUp];
 };

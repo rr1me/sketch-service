@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IControlState } from '../../redux/slices/controlSlice';
 import toolOrchestrator from '../Brushes/toolOrchestrator';
 import { ConnectionContext } from '../Controls/Connection/ConnectionProvider';
-import { updateEvents } from '../Controls/Connection/ConnectionUtils';
 
 interface IUseControlledCanvas {
 	canvas: RefObject<HTMLCanvasElement>,
@@ -34,7 +33,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 			return state.baseBrushSlice;
 		}
 	});
-	const {getConnections, sendData, disconnect} = useContext(ConnectionContext);
+	const {sendData} = useContext(ConnectionContext);
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -43,11 +42,6 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 	useEffect(() => {
 		if (canvas.current) {
-
-
-			const connections = getConnections();
-			if(connections !== null) updateEvents(canvas.current!, tool, connections, disconnect);
-
 
 			const [mouseDown, mouseMove, mouseUp] = toolOrchestrator(tool, params, canvas.current, pos, dispatch, sendData);
 			canvas.current.addEventListener('mousedown', mouseDown);

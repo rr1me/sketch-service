@@ -7,7 +7,7 @@ const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
 	const size = {w: 0, h:0};
 	let saved = canvas.toDataURL();
 
-	const mouseDown = (e: MouseEvent) => {
+	const mouseDown = () => {
 		startPos.x = pos.x
 		startPos.y = pos.y
 
@@ -20,16 +20,12 @@ const square = ({ canvas, pos, dispatch,ctx }: ITool): IToolType => {
 		return {start: startPos, size};
 	}
 
-	const mouseMove = async (e: MouseEvent) => {
+	const mouseMove = async () => {
 		await shapeSaver(saved, ctx, canvas.height, canvas.width)
 
 		size.w = pos.x-startPos.x
 		size.h = pos.y-startPos.y
 
-		// ctx.beginPath();
-		// ctx.rect(startPos.x, startPos.y, size.w, size.h);
-		// ctx.fill();
-		// ctx.closePath();
 		drawSquare(ctx, startPos, size);
 	};
 

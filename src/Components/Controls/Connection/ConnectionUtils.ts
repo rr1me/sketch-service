@@ -1,6 +1,5 @@
 import { IToolParam } from '../../../redux/slices/controlSlice';
 import { shapeSaver } from '../../Brushes/toolOrchestrator';
-import { DataConnection } from 'peerjs';
 import { bbMove, drawDot, getDist } from '../../Brushes/baseBrush';
 import { Body, BrushBody, CircleBody, LineBody, PeerData, RectangleBody, SquareBody } from './types';
 import { drawSquare } from '../../Brushes/square';
@@ -12,7 +11,7 @@ let radius = 0;
 let dist = 0;
 let prev: { x: number, y: number } = { x: 0, y: 0 };
 
-const networkDraw = async (body: Body & object, ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, restore: () => void) => {
+const networkDraw = async (body: Body & object, ctx: CanvasRenderingContext2D) => {
 	const type = body.type;
 
 	const prevFill = ctx.fillStyle;
@@ -37,9 +36,6 @@ const networkDraw = async (body: Body & object, ctx: CanvasRenderingContext2D, c
 		} else if (condition === 'move') {
 			bbMove(prev, { x, y }, ctx, radius, dist);
 		}
-		// else if (condition === 'end') {
-		// 	// restore();
-		// }
 
 		ctx.strokeStyle = prevStroke;
 	} else if (type === 'Square') {
@@ -77,21 +73,8 @@ const networkDraw = async (body: Body & object, ctx: CanvasRenderingContext2D, c
 	ctx.globalAlpha = prevGlobalAlpha;
 };
 
-export const updateEvents = (canvas: HTMLCanvasElement, tool: IToolParam, connections: DataConnection[], disconnect: () => void) => {
-	const event = dataEvent(canvas, tool, disconnect);
-
-	// connections.forEach(v => v.off('data'));
-	// connections.forEach(v => v.on('data', event));
-};
-
 export const dataEvent = (canvas: HTMLCanvasElement, tool: IToolParam, disconnect: () => void) => {
 	const ctx = canvas.getContext('2d')!;
-	const restore = () => {
-		const ctx = canvas.getContext('2d')!;
-		ctx.strokeStyle = tool.color;
-		ctx.fillStyle = tool.color;
-		ctx.globalAlpha = tool.opacity;
-	};
 
 	return async (d: PeerData | any) => {
 		const data = d as PeerData;
@@ -101,7 +84,7 @@ export const dataEvent = (canvas: HTMLCanvasElement, tool: IToolParam, disconnec
 			await shapeSaver(data.body as string, ctx, canvas.height, canvas.width);
 			break;
 		case 'Drawing':
-			await networkDraw(data.body as Body & object, ctx, canvas, restore);
+			await networkDraw(data.body as Body & object, ctx);
 			break;
 		case 'Kick':
 			disconnect();
