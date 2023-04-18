@@ -52,7 +52,10 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 				const r = getRatio()
 				setHeight((window.outerHeight - 71) - r)
 				setWidth(window.outerWidth - r)
+				// console.log('????');
 			}
+			console.log(document.documentElement.scrollTop, document.documentElement.scrollHeight, document.documentElement.scrollLeft, document.documentElement.scrollWidth);
+
 
 			window.addEventListener('resize', resizeEvent)
 			return () => {
@@ -69,7 +72,8 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 		canvas: canvas, controlledCanvas: (
 			<canvas ref={canvas}
 					height={1080} width={1920}
-					style={{ height: height, width: width }}
+					// style={{ height: height, width: width }}
+					style={{ height: 1075, width: 1915 }}
 					className={s.canvas}
 			/>
 		),
@@ -80,5 +84,5 @@ export default useControlledCanvas;
 
 const getRatio = () => {
 	const isFullscreen = window.innerWidth === screen.availWidth && window.outerWidth === screen.availWidth;
-	return isFullscreen ? 50 : 66
+	return isFullscreen ? 50 : 74
 }

@@ -7,18 +7,21 @@ import { ConnectionContext } from './ConnectionProvider';
 import { actions, IConnectionSlice } from '../../../redux/slices/connectionSlice';
 import { AppDispatch } from '../../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
+import { actions as notificationActions, INotificationSlice } from '../../../redux/slices/notificationSlice';
 
 const { setSection } = actions;
+const { pushNotification } = notificationActions;
 
 const Connection: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const { section, inRoom } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
+
 	const { amIHost, openEvent, username, setUsername, disconnect } = useContext(ConnectionContext);
 	const nameRef = useRef<HTMLInputElement>(null);
 
 	const ctrlButtons = inRoom ? [
 		ic.users,
-		ic.roomSettings
+		ic.roomSettings,
 	] : [
 		ic.list,
 		ic.plus,
@@ -31,6 +34,10 @@ const Connection: FC = () => {
 
 	const shouldISeeSettings = (index: number) => index === 1 && inRoom && !amIHost;
 
+	const onNotificationPush = () => {
+		dispatch(pushNotification('hey'));
+	}
+
 	return (
 		<MovingBlock name={ic.connection} side={'top'} outsideOffset={250} gap={10} locationOffsetSide={'right'}
 					 locationOffset={10} openEvent={openEvent}>
@@ -41,7 +48,7 @@ const Connection: FC = () => {
 							{inRoom && <button className={s.ctrlButton} onClick={disconnect}>{ic.exit}</button>}
 							{ctrlButtons.map((v, i) =>
 								<button key={i} onClick={shouldISeeSettings(i) ? undefined : ctrlButtonHandler(i)}
-										className={s.ctrlButton + (i === section ? ' ' + s.iconUsing : '') + (shouldISeeSettings(i) ? ' ' + s.ctrlButtonReadonly : '' )}>{v}</button>,
+										className={s.ctrlButton + (i === section ? ' ' + s.iconUsing : '') + (shouldISeeSettings(i) ? ' ' + s.ctrlButtonReadonly : '')}>{v}</button>,
 							)}
 						</div>
 
@@ -52,6 +59,7 @@ const Connection: FC = () => {
 						<span>Please enter your username</span>
 						<input ref={nameRef} placeholder='Username' />
 						<button onClick={onNameApply} className={s.applyBtn}>Apply</button>
+						<button onClick={onNotificationPush}>push</button>
 					</div>
 				}
 			</div>

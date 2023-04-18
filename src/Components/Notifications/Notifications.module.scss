@@ -1,0 +1,37 @@
+@use "../../vars" as v;
+
+$indent: 130px;
+
+.wrapper{
+  position: absolute;
+  bottom: $indent;
+  left: $indent;
+
+  //transition: 300ms ease;
+}
+
+.notification {
+  position: relative;
+
+  background-color: v.$bg-clr;
+  border: v.$border;
+  border-radius: v.$br;
+
+  //display: flex;
+  overflow: hidden;
+
+  font-weight: 500;
+  max-width: 20vw;
+
+  transition: 300ms ease;
+}
+
+.tab{
+  background-color: red;
+
+  width: 5px;
+}
+
+.inner{
+  padding: 5px 10px;
+}

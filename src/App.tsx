@@ -5,6 +5,7 @@ import useControlledCanvas from './Components/MainFrame/useControlledCanvas';
 import 'simplebar-react/dist/simplebar.min.css';
 import { ConnectionProvider } from './Components/Controls/Connection/ConnectionProvider';
 import Controls from './Components/Controls/Controls';
+import Notifications from './Components/Notifications/Notifications';
 
 function App() {
 	const { canvas, controlledCanvas } = useControlledCanvas();
@@ -18,6 +19,7 @@ function App() {
 	return (
 		<ConnectionProvider canvas={canvasReference}>
 			<div className={s.app}>
+				<Notifications/>
 				<Controls canvas={canvas}/>
 				{controlledCanvas}
 			</div>
