@@ -6,22 +6,33 @@ import { useDispatch } from 'react-redux';
 
 const { shiftNotification } = actions;
 
-const Notification: FC<{ notification: string }> = ({ notification }) => {
-	const [style, setStyle] = useState<object | undefined>({ transform: 'translateY(0%)' });
-	// const { notifications } = useSelector((state: { notificationSlice: INotificationSlice }) => state.notificationSlice);
+type styleObject = {
+	transform: string
+}
+
+const Notification: FC<{ notification: string, style: object }> = ({ notification,style:test}) => {
+	const [style, setStyle] = useState<styleObject>({ transform: 'translateX(-200%)' });
 	const dispatch = useDispatch<AppDispatch>();
 
-	useEffect(() => {
-		// setStyle({ transform: 'translateX(0)' });
-		// setTimeout(() => {
-			// setStyle({ transform: 'translateY(-220%)' });
-			// setTimeout(() => dispatch(popNotification()), 3000);
-		// }, 1500);
-		// setTimeout(() => {
-		// 	dispatch(popNotification());
-		// 	console.log('dispatch');
-		// }, 5000);
-	}, []);
+	// useEffect(() => {
+	// 	setTimeout(() => setStyle({ transform: 'translateX(0%)' }), 50)
+	//
+	// 	setTimeout(() => moveAbove(150), 500)
+	//
+	// 	setTimeout(() => setStyle(v=>{
+	// 		console.log(v.transform.split(' ')[1]);
+	// 		return {transform: 'translateX(-200%) ' + v.transform.split(' ')[1]}
+	// 	}), 4700);
+	//
+	// }, []);
+
+	const moveAbove = (height: number) => {
+		setStyle(v=>{
+			return {transform: v.transform + ' translateY(-' + height + 'px)'}
+		})
+	}
+
+	console.log(test);
 
 	return (
 		<div className={s.notification}

@@ -10,74 +10,62 @@ const { pushNotification, shiftNotification } = actions;
 let prevCount = 0;
 
 const Notifications: FC = () => {
-	const [buffer, setBuffer] = useState<{ element: ReactElement }[]>([]);
+	const [buffer, setBuffer] = useState<{ element: ReactElement, style: object }[]>([]);
 	const { notifications } = useSelector((state: { notificationSlice: INotificationSlice }) => state.notificationSlice);
 	const dispatch = useDispatch<AppDispatch>();
 
 	const f = useRef(false);
 	useEffect(() => {
-		if (notifications.length > 0) return;
 		if (!f.current) {
 			f.current = true;
 			return;
 		}
 
-		const reveal = () => {
-			setBuffer(v => {
-
-				setTimeout(() => {
-					dispatch(shiftNotification());
-				}, 5000);
-
-				return [...v, {
-					element: <Notification key={Math.random()}
-										   notification={notifications[v.length] + Math.random()} />,
-				}];
-			});
-		};
-
 		if (notifications.length < prevCount) {
-			prevCount = notifications.length;
 			setBuffer(v => {
-				const splice = v.slice(1);
+				const slice = v.slice(1);
+				if (notifications.length > 4) {
+					setTimeout(() => dispatch(shiftNotification()), 5000);
 
-				if (notifications.length > 4){
-					splice.push({
-						element: <Notification key={Math.random()}
-											   notification={notifications[splice.length] + Math.random()} />,
-					})
-					setTimeout(() => {
-						dispatch(shiftNotification());
-					}, 5000);
+					const style = {transform: 'hey'};
+
+					slice.push({
+						element: <Notification key={Math.random()} notification={notifications[slice.length]} style={style}/>,
+						style
+					});
 				}
-				return splice
+				return slice;
 			});
+		} else if (buffer.length < 5) {
+			setBuffer(v => {
+				setTimeout(() => dispatch(shiftNotification()), 5000);
 
-			return;
+				const style = {transform: 'hey'}
+
+				return [...v,
+					{
+						element: <Notification key={Math.random()} notification={notifications[v.length]} style={style}/>,
+						style
+					}];
+			});
+			setTimeout(() => {
+				setBuffer(v=>{
+					const b = [...v];
+					b[0].style = {transform: 'nothey'}
+					// console.log(v[0].style);
+					return b;
+				})
+			}, 100)
 		}
-
 		prevCount = notifications.length;
-
-		if (buffer.length === 5) {
-			console.log('buffer fulfilled');
-			return;
-		}
-
-		reveal();
 
 	}, [notifications]);
 
 	return (
-		<div className={s.wrapper}>
+		<>
 			{buffer.map(v => v.element)}
-		</div>
+		</>
 	);
 };
 
 export default Notifications;
-
-const delay = async (delay: number) => new Promise(resolve => {
-	setTimeout(() => {
-		resolve('');
-	}, delay);
-});

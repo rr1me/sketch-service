@@ -1,6 +1,6 @@
 @use "../../vars" as v;
 
-$indent: 130px;
+$indent: 40px;
 
 .wrapper{
   position: absolute;
@@ -11,15 +11,15 @@ $indent: 130px;
 }
 
 .notification {
-  //position: absolute;
-  //bottom: $indent;
-  //left: $indent;
+  position: absolute;
+  bottom: $indent;
+  left: $indent;
 
   background-color: v.$bg-clr;
   border: v.$border;
   border-radius: v.$br;
 
-  //display: flex;
+  display: flex;
   overflow: hidden;
 
   font-weight: 500;
