@@ -37,7 +37,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 	const canvas = useRef<HTMLCanvasElement>(null);
 
-	const [height, setHeight] = useState((window.outerHeight - 71) - getRatio())
+	const [height, setHeight] = useState((window.outerHeight - 75) - getRatio())
 	const [width, setWidth] = useState(window.outerWidth - getRatio())
 
 	useEffect(() => {
@@ -50,20 +50,21 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 
 			const resizeEvent = () => {
 				const r = getRatio()
-				setHeight((window.outerHeight - 71) - r)
+				setHeight((window.outerHeight - 75) - r)
 				setWidth(window.outerWidth - r)
-				// console.log('????');
 			}
-			console.log(document.documentElement.scrollTop, document.documentElement.scrollHeight, document.documentElement.scrollLeft, document.documentElement.scrollWidth);
 
+			const preventScroll = () => window.scrollTo(0,0)
 
 			window.addEventListener('resize', resizeEvent)
+			window.addEventListener('scroll', preventScroll);
 			return () => {
 				canvas.current!.removeEventListener('mousedown', mouseDown);
 				canvas.current!.removeEventListener('mousemove', mouseMove);
 				canvas.current!.removeEventListener('mouseup', mouseUp);
 
 				window.removeEventListener('resize', resizeEvent)
+				window.removeEventListener('scroll', preventScroll);
 			};
 		}
 	}, [tool, params]); // todo might be good place to update peerConnection events
@@ -72,8 +73,7 @@ const useControlledCanvas = (): IUseControlledCanvas => {
 		canvas: canvas, controlledCanvas: (
 			<canvas ref={canvas}
 					height={1080} width={1920}
-					// style={{ height: height, width: width }}
-					style={{ height: 1075, width: 1915 }}
+					style={{ height: height, width: width }}
 					className={s.canvas}
 			/>
 		),
@@ -84,5 +84,5 @@ export default useControlledCanvas;
 
 const getRatio = () => {
 	const isFullscreen = window.innerWidth === screen.availWidth && window.outerWidth === screen.availWidth;
-	return isFullscreen ? 50 : 74
+	return isFullscreen ? 50 : 71
 }

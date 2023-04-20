@@ -11,7 +11,9 @@ $indent: 130px;
 }
 
 .notification {
-  position: relative;
+  //position: absolute;
+  //bottom: $indent;
+  //left: $indent;
 
   background-color: v.$bg-clr;
   border: v.$border;

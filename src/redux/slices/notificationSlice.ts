@@ -13,8 +13,9 @@ const notificationSlice = createSlice({
 		pushNotification: (state, { payload }) => {
 			state.notifications.push(payload);
 		},
-		popNotification: (state) => {
-			state.notifications.pop();
+		shiftNotification: (state) => {
+			state.notifications.shift();
+			console.log(current(state));
 		}
 	},
 });
