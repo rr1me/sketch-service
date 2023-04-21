@@ -1,7 +1,10 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 
 export interface INotificationSlice {
-	notifications: string[];
+	notifications: {
+		v: string,
+		k: any
+	}[];
 }
 
 const notificationSlice = createSlice({
@@ -11,11 +14,11 @@ const notificationSlice = createSlice({
 	} as INotificationSlice,
 	reducers: {
 		pushNotification: (state, { payload }) => {
-			state.notifications.push(payload);
+			state.notifications.push({v: payload, k: payload});
 		},
 		shiftNotification: (state) => {
 			state.notifications.shift();
-			console.log(current(state));
+			// console.log(current(state));
 		}
 	},
 });

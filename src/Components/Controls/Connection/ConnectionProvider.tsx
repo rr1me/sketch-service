@@ -78,7 +78,6 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 		socket.emit('subscribe');
 		socket.on('rooms', (data: IRoom[]) => {
-			console.log(data);
 			setRooms(data);
 		});
 	};

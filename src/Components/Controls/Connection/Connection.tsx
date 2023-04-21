@@ -35,7 +35,7 @@ const Connection: FC = () => {
 	const shouldISeeSettings = (index: number) => index === 1 && inRoom && !amIHost;
 
 	const onNotificationPush = () => {
-		dispatch(pushNotification('hey '));
+		dispatch(pushNotification('hey ' + Math.random() * 1000));
 	}
 
 	return (
