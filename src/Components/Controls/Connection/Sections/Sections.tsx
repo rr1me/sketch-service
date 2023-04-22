@@ -9,12 +9,12 @@ import Users from './Users/Users';
 import Filters from './Filters/Filters';
 
 const Sections: FC = () => {
-	const { section, inRoom } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
+	const { section, room } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
 
 	let elem: ReactElement = <></>;
 	switch (section) {
 	case 0:
-		elem = inRoom ? <Users/> : <Rooms />;
+		elem = room ? <Users/> : <Rooms />;
 		break;
 	case 1:
 		elem = <CreateRoom />;

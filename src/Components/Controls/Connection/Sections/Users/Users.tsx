@@ -4,14 +4,13 @@ import { ConnectionContext } from '../../ConnectionProvider';
 import { useContext } from 'react';
 import { IConnectionSlice } from '../../../../../redux/slices/connectionSlice';
 import { useSelector } from 'react-redux';
+import { notify } from '../../../../Notifications/NotificationManager';
 
 const Users = () => {
-	const { rooms, username, kick, amIHost } = useContext(ConnectionContext);
-	const { connectedRoomName } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice); // roomName only for enterRoom element now
+	const { username, kick, amIHost } = useContext(ConnectionContext);
+	const { room } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice); // roomName only for enterRoom element now
 
-	const onUserKick = (peerId: string) => () => kick(peerId);
-
-	const room = rooms.find(x => x.name === connectedRoomName);
+	const onUserKick = (peerId: string, name: string) => () => kick(peerId, name);
 
 	return (
 		<>
@@ -20,7 +19,7 @@ const Users = () => {
 					<span>{x.name}</span>
 					<div className={s.rowBlockEnd}>
 						{(x.name !== username && amIHost) &&
-							<button onClick={onUserKick(x.peerId)} className={s.userCtrlBtn}>{ic.kickUser}</button>}
+							<button onClick={onUserKick(x.peerId, x.name)} className={s.userCtrlBtn}>{ic.kickUser}</button>}
 						<span>{x.roomRole}</span>
 					</div>
 				</div>,

@@ -6,6 +6,7 @@ import { drawSquare } from '../../Brushes/square';
 import { drawCircle } from '../../Brushes/circle';
 import { drawLine } from '../../Brushes/line';
 import { drawRectangle } from '../../Brushes/rectangle';
+import { notify } from '../../Notifications/NotificationManager';
 
 let radius = 0;
 let dist = 0;
@@ -87,6 +88,7 @@ export const dataEvent = (canvas: HTMLCanvasElement, tool: IToolParam, disconnec
 			await networkDraw(data.body as Body & object, ctx);
 			break;
 		case 'Kick':
+			notify('You\'ve been kicked', '#ff0000')
 			disconnect();
 			break;
 		}

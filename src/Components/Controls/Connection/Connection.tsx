@@ -14,12 +14,12 @@ const { pushNotification } = notificationActions;
 
 const Connection: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const { section, inRoom } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
+	const { section, room } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
 
 	const { amIHost, openEvent, username, setUsername, disconnect } = useContext(ConnectionContext);
 	const nameRef = useRef<HTMLInputElement>(null);
 
-	const ctrlButtons = inRoom ? [
+	const ctrlButtons = room ? [
 		ic.users,
 		ic.roomSettings,
 	] : [
@@ -32,11 +32,7 @@ const Connection: FC = () => {
 
 	const onNameApply = () => setUsername(nameRef.current?.value as string);
 
-	const shouldISeeSettings = (index: number) => index === 1 && inRoom && !amIHost;
-
-	const onNotificationPush = () => {
-		dispatch(pushNotification('hey ' + Math.random() * 1000));
-	}
+	const shouldISeeSettings = (index: number) => index === 1 && room && !amIHost;
 
 	return (
 		<MovingBlock name={ic.connection} side={'top'} outsideOffset={250} gap={10} locationOffsetSide={'right'}
@@ -44,8 +40,8 @@ const Connection: FC = () => {
 			<div className={s.connection}>
 				{username !== '' ?
 					<>
-						<div className={s.ctrl + (inRoom ? ' ' + s.rightToLeft : '')}>
-							{inRoom && <button className={s.ctrlButton} onClick={disconnect}>{ic.exit}</button>}
+						<div className={s.ctrl + (room ? ' ' + s.rightToLeft : '')}>
+							{room && <button className={s.ctrlButton} onClick={disconnect}>{ic.exit}</button>}
 							{ctrlButtons.map((v, i) =>
 								<button key={i} onClick={shouldISeeSettings(i) ? undefined : ctrlButtonHandler(i)}
 										className={s.ctrlButton + (i === section ? ' ' + s.iconUsing : '') + (shouldISeeSettings(i) ? ' ' + s.ctrlButtonReadonly : '')}>{v}</button>,
@@ -59,7 +55,6 @@ const Connection: FC = () => {
 						<span>Please enter your username</span>
 						<input ref={nameRef} placeholder='Username' />
 						<button onClick={onNameApply} className={s.applyBtn}>Apply</button>
-						<button onClick={onNotificationPush}>push</button>
 					</div>
 				}
 			</div>

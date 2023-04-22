@@ -1,10 +1,13 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 
+export type notificationType = {
+	v: string;
+	color: string | undefined;
+	k: number
+}
+
 export interface INotificationSlice {
-	notifications: {
-		v: string,
-		k: any
-	}[];
+	notifications: notificationType[];
 }
 
 const notificationSlice = createSlice({
@@ -13,13 +16,14 @@ const notificationSlice = createSlice({
 		notifications: [],
 	} as INotificationSlice,
 	reducers: {
-		pushNotification: (state, { payload }) => {
-			state.notifications.push({v: payload, k: payload});
+		pushNotification: (state, { payload }: { payload: { v: string, color: string | undefined } }) => {
+			const { v, color } = payload;
+			state.notifications.push({ v, color, k: Math.random() });
 		},
 		shiftNotification: (state) => {
 			state.notifications.shift();
 			// console.log(current(state));
-		}
+		},
 	},
 });
 
