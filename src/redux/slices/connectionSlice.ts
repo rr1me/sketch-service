@@ -47,7 +47,11 @@ const connectionSlice = createSlice({
 		},
 		setConnectedRoom: (state, { payload }: {payload: null | IRoom[]}) => {
 			if (payload === null) state.room = null
-			else state.room = payload.find(x=>x.name === state.connectedRoomName)!;
+			else {
+				if(state.room === null)
+					state.section = 0
+				state.room = payload.find(x=>x.name === state.connectedRoomName)!;
+			}
 		},
 	},
 });

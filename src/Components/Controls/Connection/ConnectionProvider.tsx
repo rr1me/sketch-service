@@ -109,22 +109,22 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 		});
 
 		peer.on('connection', (dataConnection: DataConnection) => {
+			const user = getUser(dataConnection.peer)
+
 			dataConnection.on('open', () => {
 				const save = canvas?.toDataURL();
 				dataConnection.send({
 					type: 'Canvas',
 					body: save,
 				} as PeerData);
+
+				notify(user.name + ' connected');
 			});
 
 			dataConnection.on('data', dataEvent(canvas!, tool, disconnect));
 
 			dataConnection.on('close', () => {
-				const room = store.getState().connectionSlice.room as IRoom
-
-				const user = room.users.find(x=>x.peerId === dataConnection.peer)!
-
-				notify(user.name + ' disconnected', '#0000ff')
+				if (!amIHost) notify(user.name + ' disconnected', '#0000ff')
 
 				console.log('[u] disconnect');
 			});
@@ -146,9 +146,10 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 				const connection = peer.connect(user.peerId);
 				connection.on('data', dataEvent(canvas!, tool, disconnect));
 
-				connection.on('close', () => {
+				connection.on('close', () => { // it can be called by peer.destroy()
+					console.log(amIHost);
 					if (user.roomRole === 'Host') {
-						// notify('Host disconnected', '#ff0000')
+						notify('Host disconnected', '#ff0000')
 						disconnect();
 					}
 
@@ -168,18 +169,20 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 			connections.push(dataConnection);
 		});
-
+		console.log('WHAT?');
 		notify('You successfully entered in room')
 	};
 
 	const disconnect = () => {
-		peer.destroy();
+		console.log('4real?');
+		peer.destroy(); // it calls 'close' event
+		// peer.disconnect()
 		connections.splice(0, connections.length);
 		canvas?.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height);
 
 		dispatch(setConnectedRoom(null))
 
-		// notify('Disconnected')
+		if (amIHost) notify('Room closed')
 	};
 
 	const kick = (peerId: string, name: string) => {
@@ -213,4 +216,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 	);
 };
 
-const getRoom = () => rooms
+const getUser = (peerId: string) => {
+	const room = store.getState().connectionSlice.room as IRoom
+	return room.users.find(x=>x.peerId === peerId)!
+}

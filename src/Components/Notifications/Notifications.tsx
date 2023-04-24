@@ -21,8 +21,9 @@ const Notifications: FC = () => { // todo should i fix double renders?
 			f.current = true;
 			return;
 		}
+		console.log(notifications);
 
-		if (notifications.length < prevCount) {
+		if (notifications.length < prevCount) { // todo it cant handle adding more than 1 notification. i should check if prevCount less than two or more and use loops
 			setBuffer(v => {
 				const slice = v.slice(1);
 				if (notifications.length > 4) {
