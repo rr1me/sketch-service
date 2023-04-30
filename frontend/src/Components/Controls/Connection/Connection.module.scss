@@ -4,7 +4,7 @@
 
 .connection {
   width: 250px;
-  height: 200px;
+  min-height: 200px;
   padding: 10px;
   background-color: v.$bg-clr;
   border: v.$border;

@@ -7,10 +7,8 @@ import { ConnectionContext } from './ConnectionProvider';
 import { actions, IConnectionSlice } from '../../../redux/slices/connectionSlice';
 import { AppDispatch } from '../../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions as notificationActions, INotificationSlice } from '../../../redux/slices/notificationSlice';
 
 const { setSection } = actions;
-const { pushNotification } = notificationActions;
 
 const Connection: FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
