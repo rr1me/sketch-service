@@ -1,5 +1,9 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 
+export type saveStepType = {
+	type: brushType, save: string
+}
+
 export type brushType = 'Brush' | 'Square' | 'Circle' | 'Line' | 'Rectangle' | 'Fill'
 
 export interface IToolParam {
@@ -10,7 +14,7 @@ export interface IToolParam {
 
 export interface IControlState {
 	history: {
-		saves: { type: brushType, save: string }[],
+		saves: saveStepType[],
 		index: number
 	},
 	tool: IToolParam;

@@ -3,13 +3,6 @@
 
 .history {
   @include g.sideBlock(true);
-
-  //display: flex;
-  //flex-direction: column;
-  //gap: 10px;
-  //min-width: 180px;
-
-  //transition: transform 0.5s;
 }
 
 .historyList{
@@ -23,7 +16,6 @@
 .historyCtrl {
   display: flex;
   gap: 2px;
-  //justify-content: flex-end;
 
   span {
     margin-right: 5px;
@@ -44,7 +36,6 @@
   @include g.iconButton
 }
 
-//.bar{
-//  background-color: transparent;
-//  border: v.$border;
-//}
+.iconButtonReadonly{
+  @include g.iconButtonReadonly
+}

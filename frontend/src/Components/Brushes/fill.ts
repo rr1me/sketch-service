@@ -1,5 +1,6 @@
 import { actions } from '../../redux/slices/controlSlice';
 import { ITool, IToolType } from './itool';
+import { saveHistory } from './toolOrchestrator';
 
 const { save } = actions;
 
@@ -14,7 +15,7 @@ const fill = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 
 		const items = canvas.toDataURL();
 
-		dispatch(save({type: 'Fill', save: items}));
+		saveHistory({type: 'Fill', save: items})
 	};
 
 	const mouseUp = () => {};

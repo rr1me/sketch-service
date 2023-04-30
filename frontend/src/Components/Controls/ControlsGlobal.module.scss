@@ -2,26 +2,23 @@
 
 @mixin sideBlock($left) {
   border-radius: v.$br;
-  //position: absolute;
-  //top: 20vh;
 
   padding: 15px;
   background-color: v.$bg-clr;
   border: v.$border;
-
-  //@if $left {
-  //  left: 40px;
-  //} @else{
-  //  right: 40px;
-  //}
 }
 
 @mixin iconButton {
   padding: 3px 6px;
-  //display: flex;
 }
 
 @mixin iconUsing{
   border-color: v.$usingClr;
   box-shadow: 0 0 2px 2px v.$usingClr;
+}
+
+@mixin iconButtonReadonly{
+  cursor: default;
+  background-color: v.$bg-clr;
+  box-shadow: 0 0 0 1px v.$bord-clr;
 }

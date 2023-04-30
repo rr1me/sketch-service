@@ -1,5 +1,6 @@
 import { ITool, IToolType } from './itool';
 import { actions } from '../../redux/slices/controlSlice';
+import { saveHistory } from './toolOrchestrator';
 
 const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	ctx.lineCap = 'round';
@@ -17,7 +18,7 @@ const baseBrush = ({ canvas, pos, dispatch, ctx }: ITool): IToolType => {
 	const mouseUp = () => {
 		const items = canvas.toDataURL();
 
-		dispatch(actions.save({ type: 'Brush', save: items }));
+		saveHistory({ type: 'Brush', save: items })
 	}
 	const mouseMove = async () => bbMove(prev, pos, ctx, radius, dist)
 

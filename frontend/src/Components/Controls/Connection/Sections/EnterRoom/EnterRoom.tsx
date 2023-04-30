@@ -5,6 +5,7 @@ import { IControlState } from '../../../../../redux/slices/controlSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, IConnectionSlice } from '../../../../../redux/slices/connectionSlice';
 import { AppDispatch } from '../../../../../redux/store';
+import { notify } from '../../../../Notifications/NotificationManager';
 
 const { setRoomName } = actions;
 
@@ -22,18 +23,18 @@ const EnterRoom: FC = () => {
 		const room = rooms.find(x => x.name === roomNameForExternalConnection);
 
 		if (room === undefined) {
-			console.log('no such room'); // todo error system
+			notify('No such room with this name', '#ff0000');
 			return;
 		}
 
 		console.log(room.users.length, room.slots);
 		if (room.users.length >= room.slots){
-			console.log('room is full');
+			notify('Room is fulfilled', '#ff0000')
 			return;
 		}
 
 		if (room.password !== '' && room.password !== passRef.current?.value) {
-			console.log('wrong password');
+			notify('Wrong password', '#ff0000');
 			return;
 		}
 

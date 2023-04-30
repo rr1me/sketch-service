@@ -11,9 +11,7 @@ import { notify } from '../../../../Notifications/NotificationManager';
 const CreateRoom = () => {
 	const { rooms, createRoom, changeRoom } = useContext(ConnectionContext);
 	const { tool } = useSelector((state: { controlSlice: IControlState }) => state.controlSlice);
-	const {
-		room
-	} = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
+	const { room } = useSelector((state: { connectionSlice: IConnectionSlice }) => state.connectionSlice);
 
 	const [slots, setSlots] = useState(room ? slotsOptions.indexOf(room.slots + '') : 0);
 
@@ -30,7 +28,7 @@ const CreateRoom = () => {
 		const name = nameRef.current!.value;
 
 		if (!room && rooms.some(x => x.name === name)) {
-			notify('There is already the room with that name', '#ff0000')
+			notify('There is already the room with that name', '#ff0000');
 			return;
 		}
 

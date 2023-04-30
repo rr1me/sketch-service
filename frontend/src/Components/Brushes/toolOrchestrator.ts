@@ -1,5 +1,5 @@
-import { actions, brushType, IToolParam } from '../../redux/slices/controlSlice';
-import { AppDispatch } from '../../redux/store';
+import { actions, brushType, IToolParam, saveStepType } from '../../redux/slices/controlSlice';
+import { AppDispatch, store } from '../../redux/store';
 import baseBrush from './baseBrush';
 import square from './square';
 import circle from './circle';
@@ -139,7 +139,7 @@ const getTool = (tool: IToolParam, params: IParamObject, canvas: HTMLCanvasEleme
 export const defMouseUp = (type: brushType, ctx: CanvasRenderingContext2D, dispatch: AppDispatch, canvas: HTMLCanvasElement) => {
 	const items = canvas.toDataURL();
 
-	dispatch(actions.save({ type: type, save: items }));
+	saveHistory({type: type, save: items})
 };
 
 export const shapeSaver = async (saved: string, ctx: CanvasRenderingContext2D, height: number, width: number) => {
@@ -162,3 +162,11 @@ export const lineCapOptions = [
 ] as { value: tLineCap, label: string }[];
 
 export default toolOrchestrator;
+
+export const saveHistory = (saveStep: saveStepType) => {
+	const isMultiplayer = !!store.getState().connectionSlice.room
+
+	if (isMultiplayer) return;
+
+	store.dispatch(actions.save(saveStep))
+}

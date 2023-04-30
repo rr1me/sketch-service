@@ -19,7 +19,7 @@ export type IRoom = {
 	users: IUser[]
 }
 
-type PeerDataType = 'Drawing' | 'Canvas' | 'Kick'
+type PeerDataType = 'Drawing' | 'Canvas' | 'Kick' | 'Clear'
 
 export type BrushBody = {
 	type: brushType,
@@ -75,5 +75,5 @@ export type LineBody = {
 export type Body = BrushBody | SquareBody | CircleBody | RectangleBody | LineBody | string
 export type PeerData = {
 	type: PeerDataType;
-	body: Body
+	body?: Body
 }
