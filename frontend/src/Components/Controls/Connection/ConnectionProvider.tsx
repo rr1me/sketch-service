@@ -69,8 +69,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 	const [rooms, setRooms] = useState<IRoom[]>([]);
 
 	useEffect(() => {
-		socket = io(`${process.env.REACT_APP_API_PROTOCOL}://
-		${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/gateway`);
+		socket = io(`http://${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/gateway`);
 
 		socket.on('message', (socket: any) => {
 			console.log(socket);
