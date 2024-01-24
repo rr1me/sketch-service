@@ -3,11 +3,6 @@ import React, { useRef, useState } from 'react';
 import Modal from '../Modal/Modal';
 import ic from '../Icons/Icons';
 
-// interface ISelectorOptions {
-// 	value: string,
-// 	label: string
-// }
-
 const Selector = ({options, value, onChange}: {options: string[], value: number, onChange: (e:number) => void}) => {
 	const controlRef = useRef(null);
 	const [open, setOpen] = useState(false);

@@ -69,7 +69,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 	const [rooms, setRooms] = useState<IRoom[]>([]);
 
 	useEffect(() => {
-		socket = io('http://localhost:3001/gateway');
+		socket = io(`${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}/gateway`);
 
 		socket.on('message', (socket: any) => {
 			console.log(socket);
@@ -92,8 +92,8 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 	const makePeer = () => {
 		peer = new Peer({
-			host: 'localhost',
-			port: 3002,
+			host: process.env.REACT_APP_API_HOST,
+			port: Number(process.env.REACT_APP_API_PEER_PORT),
 		});
 		clearHistory();
 		return peer;
