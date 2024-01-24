@@ -106,7 +106,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 		peer.on('open', (peerId: string) => {
 			dispatch(setConnectedRoomName(room.name));
-			room.users.push({ name: username, socketId: socket.id, peerId: peerId, roomRole: 'Host' });
+			room.users.push({ name: username, socketId: socket.id!, peerId: peerId, roomRole: 'Host' });
 
 			socket.emit('makeRoom', room);
 
@@ -145,7 +145,7 @@ export const ConnectionProvider: FC<{ children: ReactNode, canvas: HTMLCanvasEle
 
 		peer.on('open', () => {
 			dispatch(setConnectedRoomName(room.name));
-			const user: IUser = { name: username, peerId: peer.id, roomRole: 'User', socketId: socket.id };
+			const user: IUser = { name: username, peerId: peer.id, roomRole: 'User', socketId: socket.id! };
 			socket.emit('enter', { roomName: room.name, user });
 
 			for (const user of room.users) {
